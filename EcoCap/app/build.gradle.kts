@@ -2,7 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("com.google.devtools.ksp") version "1.9.21-1.0.15"
+    id("com.google.dagger.hilt.android") version "2.50" apply false
+    id("com.google.protobuf") version "0.9.4" apply false
 }
+
+val IS_ANDROID_BUILD = true
 
 android {
     namespace = "com.example.ecocap"
@@ -37,6 +43,15 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "**/attach_hotspot_windows.dll"
+            excludes += "META-INF/licenses/**"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
@@ -49,6 +64,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // ml-kit
+    implementation("com.google.mlkit:object-detection:17.0.1")
+    implementation("com.google.mlkit:image-labeling:17.0.8")
+
+    implementation(libs.vision.common)
+    implementation(libs.image.labeling.common)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
