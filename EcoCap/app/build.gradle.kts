@@ -71,6 +71,7 @@ dependencies {
 
     implementation(libs.vision.common)
     implementation(libs.image.labeling.common)
+    implementation(libs.androidx.navigation.runtime.ktx)
 
 
     testImplementation(libs.junit)
