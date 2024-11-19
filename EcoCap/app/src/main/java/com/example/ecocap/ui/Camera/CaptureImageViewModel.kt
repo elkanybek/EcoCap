@@ -1,6 +1,10 @@
 package com.example.ecocap.ui.Camera
 
 import android.graphics.Bitmap
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +31,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import coil.compose.AsyncImage
 import com.example.ecocap.R
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import okio.IOException
+import android.content.Context
+import android.content.Context.CAMERA_SERVICE
+import com.google.mlkit.vision.label.ImageLabel
 
 class CaptureImageViewModel : ViewModel() {
     // State to hold the label text
@@ -161,9 +173,23 @@ class CaptureImageViewModel : ViewModel() {
 fun CaptureImageScreen(
     viewModel: CaptureImageViewModel,
     onCaptureClick: () -> Unit,
+    context: Context,
     capturedImage: Bitmap?
 ) {
     val labelText by viewModel.labelText
+
+    var selectedImageUri by remember {mutableStateOf<Uri?>(null)}
+    var imageLabels by remember {mutableStateOf<List<ImageLabel>>(emptyList())}
+
+    val photoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {
+            selectedImageUri = it
+            if(selectedImageUri != null){
+                imageLabels = getImageLabels(context, selectedImageUri as Uri)
+            }
+        }
+    )
 
     Column(
         modifier = Modifier
@@ -172,14 +198,19 @@ fun CaptureImageScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (capturedImage != null) {
+        if (selectedImageUri != null) {
             // Display the captured image
-            Image(
-                bitmap = capturedImage.asImageBitmap(),
-                contentDescription = "Captured Image",
-                modifier = Modifier
-                    .height(400.dp)
-                    .fillMaxWidth()
+//            Image(
+//                bitmap = capturedImage.asImageBitmap(),
+//                contentDescription = "Captured Image",
+//                modifier = Modifier
+//                    .height(400.dp)
+//                    .fillMaxWidth()
+//            )
+            AsyncImage(
+                modifier = Modifier.height(400.dp).fillMaxWidth(),
+                model = selectedImageUri,
+                contentDescription = null
             )
         } else {
             // Display placeholder
@@ -205,6 +236,21 @@ fun CaptureImageScreen(
             )
         }
 
+        Button(
+            onClick = {
+                photoPicker.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            },
+            modifier = Modifier.wrapContentSize()
+        ) {
+            Text(
+                text = "Upload Image",
+                fontSize = 18.sp,
+                color = Color.White
+            )
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
@@ -214,5 +260,26 @@ fun CaptureImageScreen(
             color = Color.Blue
         )
     }
+}
+
+fun getImageLabels(context: Context, imageUri: Uri) : List<ImageLabel>{
+    var imageLabels: List<ImageLabel> = emptyList()
+    val image: InputImage
+    try {
+        image = InputImage.fromFilePath(context, imageUri)
+        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+        labeler.process(image)
+            .addOnSuccessListener { labels ->
+                imageLabels = labels
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+            }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+œ
+    return imageLabels
 }
 

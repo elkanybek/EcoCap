@@ -169,6 +169,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
     private var capturedImageBitmap: Bitmap? = null
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -176,7 +177,7 @@ class MainActivity : ComponentActivity() {
         cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val extras = result.data?.extras
-                val imageBitmap = extras?.getParcelable<Bitmap>("data")
+                val imageBitmap = extras?.getParcelable("data", Bitmap::class.java)
                 if (imageBitmap != null) {
                     capturedImageBitmap = imageBitmap
                 } else {
@@ -194,13 +195,14 @@ class MainActivity : ComponentActivity() {
                 viewModel = viewModel,
                 onCaptureClick = {
                     val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    if (cameraIntent.resolveActivity(packageManager) != null) {
+                    if (true) {
                         cameraLauncher.launch(cameraIntent)
                     } else {
                         viewModel.updateLabelText("Camera not available")
                     }
                 },
-                capturedImage = capturedImageBitmap
+                capturedImage = capturedImageBitmap,
+                context = this
             )
         }
 
