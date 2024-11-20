@@ -6,20 +6,17 @@ plugins {
 
 
 android {
-    namespace = "com.example.mood"
+    namespace = "com.example.ecocap"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mood"
-        minSdk = 26
+        applicationId = "com.example.ecocap"
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
     buildTypes {
@@ -44,11 +41,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
@@ -59,8 +51,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
-    implementation(libs.generativeai)
     annotationProcessor(libs.androidx.room.compiler)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

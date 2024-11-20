@@ -6,6 +6,7 @@ import com.example.ecocap.Data.Repository.UserStore
 import com.example.ecocap.Data.Repository.PointStore
 import com.example.ecocap.Data.Repository.QuestStore
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun QuestListScreen(questRepository: QuestRepository) {
     val questList = remember { mutableStateOf<List<QuestStore>>(emptyList()) }
-
+    Text("Hello world")
     LaunchedEffect(Unit) {
         questList.value = withContext(Dispatchers.IO) {
             questRepository.getAllQuests()
@@ -69,4 +70,3 @@ fun QuestItem(questStore: QuestStore) {
         Text(text = "Label: ${questStore.name}")
     }
 }
-
