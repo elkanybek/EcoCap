@@ -1,6 +1,5 @@
 package com.example.ecocap.ui.Camera
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -35,9 +34,7 @@ import com.example.ecocap.ML_Kit.getImageLabels
 
 @Composable
 fun CaptureImageScreen(
-    onCaptureClick: () -> Unit,
     context: Context,
-    capturedImage: Bitmap?
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var topLabel by remember { mutableStateOf<String?>(null) }
