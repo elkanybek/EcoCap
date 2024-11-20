@@ -93,35 +93,51 @@ fun HistoryScreen(
                         .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest) // Background after clip
                 ) {
-                    Column {
-                        Text(
-                            text = "${animals[index]}",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black ,
-                            fontFamily = FontFamily.Default,
-                            modifier = Modifier
-                                .align(Alignment.Start)
-                                .padding(8.dp)
-                        )
-                        Text(
-                            text = "Find a ${animals[index]} out in the wilderness, and upload it to EcoCap",
-                            fontSize = 20.sp,
-                            color = Color.Black ,
-                            fontFamily = FontFamily.Default,
-                            modifier = Modifier
-                                .align(Alignment.Start)
-                                .padding(8.dp),
-                            softWrap = true
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        Column {
+                            Text(
+                                text = "${animals[index]}",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                fontFamily = FontFamily.Default,
+                                modifier = Modifier
+                                    .align(Alignment.Start)
+                                    .padding(8.dp)
+                            )
+                            Text(
+                                text = "+200",
+                                fontSize = 20.sp,
+                                color = Color.Black,
+                                fontFamily = FontFamily.Default,
+                                modifier = Modifier
+                                    .align(Alignment.Start)
+                                    .padding(8.dp),
+                                softWrap = true
 
+                            )
+                        }
+
+                        Image(
+                            painter = painterResource(id = R.drawable.flower),
+                            contentDescription = "Placeholder Image",
+                            modifier = Modifier
+                                .height(80.dp)
+                                .width(80.dp)
+                                .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+//                                .align(Alignment.End)
                         )
                     }
                 }
             }
+
+
         }
-
-        Spacer(modifier = Modifier.height(35.dp))
-
     }
 }
 
