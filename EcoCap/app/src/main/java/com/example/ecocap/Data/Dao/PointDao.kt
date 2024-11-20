@@ -1,6 +1,8 @@
 package com.example.ecocap.Data.Dao
 
-import PointStore
+import com.example.ecocap.Data.Repository.UserStore
+import com.example.ecocap.Data.Repository.PointStore
+import com.example.ecocap.Data.Repository.QuestStore
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
