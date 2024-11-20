@@ -5,5 +5,5 @@ import androidx.room.PrimaryKey
 data class UserStore (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val totalPoints: Int,
+    val totalPoints: Int
 )

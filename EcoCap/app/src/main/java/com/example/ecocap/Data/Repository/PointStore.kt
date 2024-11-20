@@ -9,5 +9,5 @@ data class PointStore (
     val image: String,
     val streakMultiplier: Double,
     val scoreGained: Int,
-    val dateTime: Date,
+    val dateTime: Date
 )
