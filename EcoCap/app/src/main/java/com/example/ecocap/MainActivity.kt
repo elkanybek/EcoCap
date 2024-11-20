@@ -1,5 +1,6 @@
 package com.example.ecocap
 
+import DatabaseProvider
 import QuestRepository
 import QuestStore
 import android.app.Application
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EcoCapTheme {
-                val db = AppDatabase.getInstance(applicationContext)
+                val db = DatabaseProvider.AppDatabase.getInstance(applicationContext)
                 val questRepository = QuestRepository(db.questDao())
 
                 LaunchedEffect(Unit) {
