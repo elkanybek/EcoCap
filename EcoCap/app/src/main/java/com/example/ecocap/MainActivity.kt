@@ -54,46 +54,6 @@ class MainActivity : ComponentActivity() {
 fun QuestListScreen(questRepository: QuestRepository) {
     val questList = remember { mutableStateOf<List<QuestStore>>(emptyList()) }
 
-    // Fetch data asynchronously when Composable is first launched
-    LaunchedEffect(Unit) {
-
-        // Fetch data using a coroutine
-        questList.value = withContext(Dispatchers.IO) {
-            questRepository.getAllQuests()
-        }
-    }
-
-    // Display the list using LazyColumn
-    LazyColumn {
-        items(questList.value) { questStore ->
-            QuestItem(questStore)
-        }
-    }
-}
-
-@Composable
-fun QuestItem(questStore: QuestStore) {
-    Column {
-        Text(text = "ID: ${questStore.id}")
-        Text(text = "Label: ${questStore.name}")
-                val db = AppDatabase.getInstance(applicationContext)
-                val questRepository = QuestRepository(db.questDao())
-
-                LaunchedEffect(Unit) {
-                    launch(Dispatchers.IO) {
-                        questRepository.insertQuests(quests)
-                    }
-                }
-                QuestListScreen(questRepository)
-            }
-        }
-    }
-}
-
-@Composable
-fun QuestListScreen(questRepository: QuestRepository) {
-    val questList = remember { mutableStateOf<List<QuestStore>>(emptyList()) }
-
     LaunchedEffect(Unit) {
         questList.value = withContext(Dispatchers.IO) {
             questRepository.getAllQuests()
