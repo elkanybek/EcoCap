@@ -41,6 +41,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.ecocap.ML_Kit.getImageLabels
@@ -62,33 +63,14 @@ val animals = listOf(
 
 @Composable
 fun HomeScreen(
-//    context: Context,
 ) {
-//    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-//    var topLabel by remember { mutableStateOf<String?>(null) }
-//
-//    val photoPicker = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = {
-//            selectedImageUri = it
-//            if (selectedImageUri != null) {
-//                // Call the asynchronous function and update the state with the result
-//                getImageLabels(context, selectedImageUri!!) { labels ->
-//                    topLabel = labels.maxByOrNull { it.confidence }?.text
-//                }
-//            }
-//        }
-//    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 64.dp),
-//        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-//        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "EcoCap",
@@ -106,11 +88,10 @@ fun HomeScreen(
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-//            Spacer(modifier = Modifier.width(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.fire),
                 contentDescription = "DailyStreak",
-                modifier = Modifier.height(30.dp)
+                modifier = Modifier.height(40.dp)
             )
         }
 
@@ -140,6 +121,7 @@ fun HomeScreen(
                         .width(375.dp)
                         .wrapContentHeight()
                         .padding(8.dp)
+                        .shadow(8.dp, RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest) // Background after clip
                 ) {
