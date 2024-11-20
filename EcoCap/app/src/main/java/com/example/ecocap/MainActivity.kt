@@ -1,5 +1,10 @@
 package com.example.ecocap
 
+import android.os.Build
+import android.os.Bundle
+import androidx.annotation.RequiresApi
+import com.example.ecocap.ui.Camera.CaptureImageScreen
+
 import com.example.ecocap.Data.Database.DatabaseProvider
 import QuestRepository
 import com.example.ecocap.Data.Repository.UserStore
@@ -27,10 +32,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
+            CaptureImageScreen(
+                context = this
+            )
+        }
+    }
+}
+
             EcoCapTheme {
 
             }
