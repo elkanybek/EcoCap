@@ -1,7 +1,7 @@
 package com.example.ecocap
 
 import android.os.Build
-import android.os.Bundle
+//import android.os.Bundle
 import androidx.annotation.RequiresApi
 import com.example.ecocap.ui.Camera.CaptureImageScreen
 
@@ -43,12 +43,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-            EcoCapTheme {
-
-            }
-        }
-    }
-}
-
 

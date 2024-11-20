@@ -1,15 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
 
-    id("com.google.devtools.ksp") version "1.9.21-1.0.15"
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
+
     id("com.google.dagger.hilt.android") version "2.50" apply false
     id("com.google.protobuf") version "0.9.4" apply false
-}
 
-val IS_ANDROID_BUILD = true
-    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
+    val IS_ANDROID_BUILD = true
 }
 
 
