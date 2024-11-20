@@ -32,41 +32,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EcoCapTheme {
-                val db = DatabaseProvider.AppDatabase.getInstance(applicationContext)
-                val questRepository = QuestRepository(db.questDao())
 
-                LaunchedEffect(Unit) {
-                    launch(Dispatchers.IO) {
-                        questRepository.insertQuests(quests)
-                    }
-                }
-                QuestListScreen(questRepository)
             }
         }
     }
 }
 
-@Composable
-fun QuestListScreen(questRepository: QuestRepository) {
-    val questList = remember { mutableStateOf<List<QuestStore>>(emptyList()) }
-    Text("Hello world")
-    LaunchedEffect(Unit) {
-        questList.value = withContext(Dispatchers.IO) {
-            questRepository.getAllQuests()
-        }
-    }
 
-    LazyColumn {
-        items(questList.value) { questStore ->
-            QuestItem(questStore)
-        }
-    }
-}
-
-@Composable
-fun QuestItem(questStore: QuestStore) {
-    Column {
-        Text(text = "ID: ${questStore.id}")
-        Text(text = "Label: ${questStore.name}")
-    }
-}
