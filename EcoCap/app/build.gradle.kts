@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
 
-    id("com.google.devtools.ksp") version "1.9.21-1.0.15"
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
+
     id("com.google.dagger.hilt.android") version "2.50" apply false
     id("com.google.protobuf") version "0.9.4" apply false
+
+    val IS_ANDROID_BUILD = true
 }
 
-val IS_ANDROID_BUILD = true
 
 android {
     namespace = "com.example.ecocap"
@@ -34,11 +35,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -51,6 +52,8 @@ android {
             excludes += "META-INF/LICENSE.md"
             excludes += "META-INF/LICENSE-notice.md"
         }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
 }
 
@@ -61,6 +64,16 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.2")
 
     implementation(libs.androidx.core.ktx)
+
+
+    //Room
+    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -76,7 +89,6 @@ dependencies {
     implementation(libs.vision.common)
     implementation(libs.image.labeling.common)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
 
 
     testImplementation(libs.junit)
@@ -89,3 +101,5 @@ dependencies {
 
     implementation(libs.coil.compose)
 }
+}
+
