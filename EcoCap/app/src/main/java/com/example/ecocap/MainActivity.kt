@@ -193,7 +193,8 @@ fun Router(
 
                             //4
                             IconButton(
-                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+//                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+                                onClick = { },
 //                                enabled = canNavigateBack,
                                 modifier = Modifier
                                     .size(56.dp)
@@ -204,7 +205,8 @@ fun Router(
 
                             //5
                             IconButton(
-                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+//                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+                                onClick = { },
 //                                enabled = canNavigateBack,
                                 modifier = Modifier
                                     .size(56.dp)

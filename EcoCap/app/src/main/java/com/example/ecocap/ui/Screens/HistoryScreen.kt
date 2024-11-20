@@ -41,6 +41,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.ecocap.ML_Kit.getImageLabels
@@ -61,25 +62,17 @@ fun HistoryScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-//        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "History",
-            fontSize = 80.sp,
+            fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
 
-        Spacer(modifier = Modifier.height(35.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = "Today's Quests",
-            fontSize = 40.sp,
-            textDecoration = TextDecoration.Underline,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-
-        )
 
         LazyColumn(
             modifier = Modifier
@@ -96,6 +89,7 @@ fun HistoryScreen(
                         .width(375.dp)
                         .wrapContentHeight()
                         .padding(8.dp)
+                        .shadow(8.dp, RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest) // Background after clip
                 ) {
