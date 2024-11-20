@@ -96,171 +96,297 @@ class MainActivity : ComponentActivity() {
  * Handles navigation between screens.
  *
  */
-@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Router(
     context: Context
 ) {
-
-    val thisContext = context;
     val navController = rememberNavController()
-    var canNavigateBack by rememberSaveable() { mutableStateOf(false) }
-    var inSettingsScreen by rememberSaveable() { mutableStateOf(false) }
-
-    Surface(
-        color = Color(0xFFBA1A1A),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    modifier = Modifier.padding(0.dp),
-                    colors = topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary       // Sets action icon color
-                    ),
-                    title = {
-//                        Row {
-//                            val image = painterResource(R.drawable.logo)
-//                            Image(
-//                                painter = image,
-//                                contentDescription = "EcoCap",
-//                                modifier = Modifier
-//                                    .size(40.dp)
-//                                    .padding(8.dp)
-//                            )
-                            Text( "EcoCap")
-//                        }
-                    },
-                    actions = {
-                        IconButton(
-                            onClick = { navController.navigate("SettingsScreenRoute")},
-                            enabled = !inSettingsScreen
-                        ) {
-                            Image(
-                                painter = painterResource(R.drawable.logo),
-                                contentDescription = "Settings",
-                                modifier = Modifier.size(300.dp).padding(0.dp)
-                            )
-                        }
-
-                    },
+    var canNavigateBack by rememberSaveable { mutableStateOf(false) }
+    var inSettingsScreen by rememberSaveable { mutableStateOf(false) }
 
 
-                )
-            },
-            bottomBar = {
-                BottomAppBar(
-                    actions = {
-                        Row (
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ){
-                            //1
-                            IconButton(
-                                onClick = { navController.navigate("HomeScreenRoute")},
-//                                enabled = canNavigateBack,
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
-                            }
+    TopBottomBar(navController, inSettingsScreen) {
+        CompositionLocalProvider(LocalNavController provides navController) {
+            NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
-                            //2
-                            IconButton(
-                                onClick = { navController.navigate("HistoryScreenRoute")},
-//                                enabled = canNavigateBack,
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
-                            }
-
-                            //3
-                            IconButton(
-                                onClick = { navController.navigate("CaptureScreenRoute")},
-//                                enabled = canNavigateBack,
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Icon(Icons.Filled.AddCircle, contentDescription = "Caputre", Modifier.size(40.dp))
-                            }
-
-                            //4
-                            IconButton(
-//                                onClick = { navController.popBackStack(); inSettingsScreen = false },
-                                onClick = { },
-//                                enabled = canNavigateBack,
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
-                            }
-
-                            //5
-                            IconButton(
-//                                onClick = { navController.popBackStack(); inSettingsScreen = false },
-                                onClick = { },
-//                                enabled = canNavigateBack,
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
-                            }
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                )
-            },
-            content = {
-                CompositionLocalProvider(LocalNavController provides navController) {
-                    NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
-
-                        composable("HomeScreenRoute")
-                        {
-                            HomeScreen()
-                        }
-
-                        composable("HistoryScreenRoute")
-                        {
-                            HistoryScreen()
-//                            canNavigateBack = navController.previousBackStackEntry != null
-//                            SettingsScreen(
-//                                onThemeChange = onThemeChange,
-//                                isInSettings = { inSettingsScreen = it }
-//                            )
-                        }
-
-                        composable("CaptureScreenRoute")
-                        {
-                            CaptureImageScreen(
-                                context = thisContext
-                            )
-                        }
-
-                        composable("ScoreScreenRoute/{score}")
-                        {
-                            var score: String = it.arguments?.getString("score") ?: ""
-//                            ScoreScreen(
-//                                finalScore = score.toInt(),
-//                                highScore = highScore,
-//                                onHighScoreUpdate = { highScore = it }
-//                            )
-                        }
-                    }
+                composable("HomeScreenRoute") {
+                    HomeScreen()
+                }
+                composable("HistoryScreenRoute") {
+                    HistoryScreen()
+                }
+                composable("CaptureScreenRoute") {
+                    CaptureImageScreen(
+                        context = context
+                    )
+                }
+                composable("ScoreScreenRoute/{score}") {
+                    val score: String = it.arguments?.getString("score") ?: ""
                 }
             }
-        )
+        }
     }
+
+
 }
 
+
+
+
+//@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun Router(
+//    context: Context
+//) {
+//
+//    val thisContext = context;
+//    val navController = rememberNavController()
+//    var canNavigateBack by rememberSaveable() { mutableStateOf(false) }
+//    var inSettingsScreen by rememberSaveable() { mutableStateOf(false) }
+//
+//    Surface(
+//        color = Color(0xFFBA1A1A),
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        Scaffold(
+//            topBar = {
+//                TopAppBar(
+//                    modifier = Modifier.padding(0.dp),
+//                    colors = topAppBarColors(
+//                        containerColor = MaterialTheme.colorScheme.tertiary,
+//                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+//                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary       // Sets action icon color
+//                    ),
+//                    title = {
+////                        Row {
+////                            val image = painterResource(R.drawable.logo)
+////                            Image(
+////                                painter = image,
+////                                contentDescription = "EcoCap",
+////                                modifier = Modifier
+////                                    .size(40.dp)
+////                                    .padding(8.dp)
+////                            )
+//                            Text( "EcoCap")
+////                        }
+//                    },
+//                    actions = {
+//                        IconButton(
+//                            onClick = { navController.navigate("SettingsScreenRoute")},
+//                            enabled = !inSettingsScreen
+//                        ) {
+//                            Image(
+//                                painter = painterResource(R.drawable.logo),
+//                                contentDescription = "Settings",
+//                                modifier = Modifier.size(300.dp).padding(0.dp)
+//                            )
+//                        }
+//
+//                    },
+//
+//
+//                )
+//            },
+//            bottomBar = {
+//                BottomAppBar(
+//                    actions = {
+//                        Row (
+//                            horizontalArrangement = Arrangement.SpaceBetween,
+//                            modifier = Modifier.fillMaxWidth()
+//                        ){
+//                            //1
+//                            IconButton(
+//                                onClick = { navController.navigate("HomeScreenRoute")},
+////                                enabled = canNavigateBack,
+//                                modifier = Modifier
+//                                    .size(56.dp)
+//                                    .clip(CircleShape)
+//                            ) {
+//                                Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
+//                            }
+//
+//                            //2
+//                            IconButton(
+//                                onClick = { navController.navigate("HistoryScreenRoute")},
+////                                enabled = canNavigateBack,
+//                                modifier = Modifier
+//                                    .size(56.dp)
+//                                    .clip(CircleShape)
+//                            ) {
+//                                Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
+//                            }
+//
+//                            //3
+//                            IconButton(
+//                                onClick = { navController.navigate("CaptureScreenRoute")},
+////                                enabled = canNavigateBack,
+//                                modifier = Modifier
+//                                    .size(56.dp)
+//                                    .clip(CircleShape)
+//                            ) {
+//                                Icon(Icons.Filled.AddCircle, contentDescription = "Caputre", Modifier.size(40.dp))
+//                            }
+//
+//                            //4
+//                            IconButton(
+////                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+//                                onClick = { },
+////                                enabled = canNavigateBack,
+//                                modifier = Modifier
+//                                    .size(56.dp)
+//                                    .clip(CircleShape)
+//                            ) {
+//                                Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
+//                            }
+//
+//                            //5
+//                            IconButton(
+////                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+//                                onClick = { },
+////                                enabled = canNavigateBack,
+//                                modifier = Modifier
+//                                    .size(56.dp)
+//                                    .clip(CircleShape)
+//                            ) {
+//                                Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
+//                            }
+//                        }
+//                    },
+//                    containerColor = MaterialTheme.colorScheme.tertiary,
+//                )
+//            },
+//            content = {
+//                CompositionLocalProvider(LocalNavController provides navController) {
+//                    NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
+//
+//
+//                        composable("HomeScreenRoute")
+//                        {
+//                            HomeScreen()
+//                        }
+//
+//                        composable("HistoryScreenRoute")
+//                        {
+//                            HistoryScreen()
+////                            canNavigateBack = navController.previousBackStackEntry != null
+////                            SettingsScreen(
+////                                onThemeChange = onThemeChange,
+////                                isInSettings = { inSettingsScreen = it }
+////                            )
+//                        }
+//
+//                        composable("CaptureScreenRoute")
+//                        {
+//                            CaptureImageScreen(
+//                                context = thisContext
+//                            )
+//                        }
+//
+//                        composable("ScoreScreenRoute/{score}")
+//                        {
+//                            var score: String = it.arguments?.getString("score") ?: ""
+////                            ScoreScreen(
+////                                finalScore = score.toInt(),
+////                                highScore = highScore,
+////                                onHighScoreUpdate = { highScore = it }
+////                            )
+//                        }
+//                    }
+//                }
+//            }
+//        )
+//    }
+//}
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBottomBar(
+    navController: NavController,
+    inSettingsScreen: Boolean,
+    content: @Composable () -> Unit
+) {
+    Scaffold(
+        topBar = { TopBar(navController, inSettingsScreen) },
+        bottomBar = { BottomBar(navController) },
+        content = { content() }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(navController: NavController, inSettingsScreen: Boolean) {
+    TopAppBar(
+        modifier = Modifier.padding(0.dp),
+        colors = topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        title = { Text("EcoCap") },
+        actions = {
+            IconButton(
+                onClick = { navController.navigate("SettingsScreenRoute") },
+                enabled = !inSettingsScreen
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.logo),
+                    contentDescription = "Settings",
+                    modifier = Modifier.size(300.dp).padding(0.dp)
+                )
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomBar(navController: NavController) {
+    BottomAppBar(
+        actions = {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                IconButton(
+                    onClick = { navController.navigate("HomeScreenRoute") },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                ) {
+                    Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
+                }
+                IconButton(
+                    onClick = { navController.navigate("HistoryScreenRoute") },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                ) {
+                    Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
+                }
+                IconButton(
+                    onClick = { navController.navigate("CaptureScreenRoute") },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                ) {
+                    Icon(Icons.Filled.AddCircle, contentDescription = "Capture", Modifier.size(40.dp))
+                }
+                IconButton(
+                    onClick = { },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                ) {
+                    Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
+                }
+                IconButton(
+                    onClick = { },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                ) {
+                    Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
+                }
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.tertiary,
+    )
+}
 
 @Preview
 @Composable
