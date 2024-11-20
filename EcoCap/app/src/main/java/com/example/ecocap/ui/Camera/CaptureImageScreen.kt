@@ -30,6 +30,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.ecocap.R
 import android.content.Context
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import com.example.ecocap.ML_Kit.getImageLabels
 
 @Composable
@@ -87,11 +93,18 @@ fun CaptureImageScreen(
             },
             modifier = Modifier.wrapContentSize()
         ) {
-            Text(
-                text = "Upload Image",
-                fontSize = 18.sp,
-                color = Color.White
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+
+            ){
+                Icon(Icons.Filled.Search, contentDescription = "Upload", Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = "Upload Image",
+                    fontSize = 18.sp,
+                    color = Color.White
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
