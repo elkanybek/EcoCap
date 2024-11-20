@@ -56,6 +56,10 @@ android {
 
 dependencies {
 
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.8.2")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -72,6 +76,7 @@ dependencies {
     implementation(libs.vision.common)
     implementation(libs.image.labeling.common)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
 
 
     testImplementation(libs.junit)

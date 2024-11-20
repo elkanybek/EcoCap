@@ -12,6 +12,7 @@ composeBom = "2024.04.01"
 visionCommon = "17.3.0"
 imageLabelingCommon = "18.1.0"
 navigationRuntimeKtx = "2.8.4"
+navigationCompose = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,7 @@ mlkit-image-labeling = "com.google.mlkit:image-labeling:17.0.0"
 vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "visionCommon" }
 image-labeling-common = { group = "com.google.mlkit", name = "image-labeling-common", version.ref = "imageLabelingCommon" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
