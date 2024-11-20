@@ -1,16 +1,16 @@
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
 }
 
+
 android {
-    namespace = "com.example.ecocap"
+    namespace = "com.example.mood"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.ecocap"
+        applicationId = "com.example.mood"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -49,14 +49,17 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
 
 dependencies {
+
     //Room
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.generativeai)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -72,4 +75,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-}}
+}
+

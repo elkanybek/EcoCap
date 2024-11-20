@@ -1,16 +1,21 @@
+package com.example.ecocap.Data.Database
+
+import com.example.ecocap.Data.Repository.UserStore
+import com.example.ecocap.Data.Repository.PointStore
+import com.example.ecocap.Data.Repository.QuestStore
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
-//import com.example.ecocap.Data.Dao.PointDao
+import com.example.ecocap.Data.Dao.PointDao
 import com.example.ecocap.Data.Dao.QuestDao
-//import com.example.ecocap.Data.Dao.UserDao
+import com.example.ecocap.Data.Dao.UserDao
 
-object DatabaseProvider{
+object DatabaseProvider {
     @Database(entities = [UserStore::class, PointStore::class, QuestStore::class], version = 1)
     abstract class AppDatabase : RoomDatabase() {
-        //    abstract fun userDao(): UserDao
-        //    abstract fun pointDao(): PointDao
+        abstract fun userDao(): UserDao
+        abstract fun pointDao(): PointDao
         abstract fun questDao(): QuestDao
 
         companion object {

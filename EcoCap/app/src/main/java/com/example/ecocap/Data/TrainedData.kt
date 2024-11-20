@@ -1,6 +1,8 @@
 package com.example.ecocap.Data
 
-import QuestStore
+import com.example.ecocap.Data.Repository.UserStore
+import com.example.ecocap.Data.Repository.PointStore
+import com.example.ecocap.Data.Repository.QuestStore
 
 
 //Asked ChatGPT to generate this based off of table

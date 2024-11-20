@@ -1,3 +1,5 @@
+package com.example.ecocap.Data.Repository
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,3 +9,4 @@ data class UserStore (
     val name: String,
     val totalPoints: Int
 )
+

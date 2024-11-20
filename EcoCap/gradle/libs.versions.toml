@@ -1,38 +1,26 @@
 [versions]
 agp = "8.7.2"
-converterGson = "2.9.0"
-hiltAndroidCompiler = "2.44"
-kotlin = "2.0.21"
+firebaseBom = "33.5.1"
+generativeai = "0.9.0"
+kotlin = "1.9.20"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-ktorClientOkhttp = "2.3.0"
-lifecycleRuntimeKtx = "2.8.6"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.01"
-lifecycleViewmodelCompose = "2.8.7"
+composeBom = "2024.04.01"
 
-navigationCompose = "2.8.4"
-openaiClient = "3.2.5"
-roomCommon = "2.6.1"
-roomCompiler = "2.6.1"
-roomCompilerVersion = "2.6.1"
-roomGuava = "2.6.1"
-roomKtx = "2.6.1"
-roomPaging = "2.6.1"
-roomRuntime = "2.6.1"
-roomRxjava2 = "2.6.1"
-roomRxjava3 = "2.6.1"
-roomTesting = "2.6.1"
-ksp = "2.0.21-1.0.27"
-composeCompiler = "1.5.15"
+roomRuntime = "2.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -46,14 +34,9 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttp" }
-openai = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }
-androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+# compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

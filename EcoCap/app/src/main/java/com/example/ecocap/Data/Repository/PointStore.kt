@@ -1,7 +1,12 @@
+package com.example.ecocap.Data.Repository
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.ColumnInfo
+import com.example.ecocap.Data.Repository.UserStore
+import com.example.ecocap.Data.Repository.PointStore
+import com.example.ecocap.Data.Repository.QuestStore
 
 @Entity(
     tableName = "points",
