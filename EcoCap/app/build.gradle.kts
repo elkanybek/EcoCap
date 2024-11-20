@@ -1,4 +1,5 @@
 plugins {
+    kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
@@ -40,6 +41,13 @@ android {
 }
 
 dependencies {
+    //https://developer.android.com/training/data-storage/room
+    implementation("androidx.room:room-runtime:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
+
+    implementation("androidx.room:room-ktx:2.5.0")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
