@@ -49,11 +49,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.ecocap.ui.Screens.HomeScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 
 //class MainActivity : ComponentActivity() {
@@ -155,8 +157,9 @@ fun Router(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ){
+                            //1
                             IconButton(
-                                onClick = { navController.navigate("MainScreenRoute")},
+                                onClick = { navController.navigate("HomeScreenRoute")},
 //                                enabled = canNavigateBack,
                                 modifier = Modifier
                                     .size(56.dp)
@@ -164,8 +167,10 @@ fun Router(
                             ) {
                                 Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
                             }
+
+                            //2
                             IconButton(
-                                onClick = { navController.popBackStack(); inSettingsScreen = false },
+                                onClick = { navController.navigate("CaptureScreenRoute")},
 //                                enabled = canNavigateBack,
                                 modifier = Modifier
                                     .size(56.dp)
@@ -173,6 +178,8 @@ fun Router(
                             ) {
                                 Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
                             }
+
+                            //3
                             IconButton(
                                 onClick = { navController.navigate("CaptureScreenRoute")},
 //                                enabled = canNavigateBack,
@@ -182,6 +189,8 @@ fun Router(
                             ) {
                                 Icon(Icons.Filled.AddCircle, contentDescription = "Caputre", Modifier.size(40.dp))
                             }
+
+                            //4
                             IconButton(
                                 onClick = { navController.popBackStack(); inSettingsScreen = false },
 //                                enabled = canNavigateBack,
@@ -191,6 +200,8 @@ fun Router(
                             ) {
                                 Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
                             }
+
+                            //5
                             IconButton(
                                 onClick = { navController.popBackStack(); inSettingsScreen = false },
 //                                enabled = canNavigateBack,
@@ -207,20 +218,16 @@ fun Router(
             },
             content = {
                 CompositionLocalProvider(LocalNavController provides navController) {
-                    NavHost(navController = navController, startDestination = "MainScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
+                    NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
-                        composable("MainScreenRoute")
+                        composable("HomeScreenRoute")
                         {
-//                            MainMenuScreen()
-//                            CaptureImageScreen(
-//                                context = thisContext
-//                            )
-
+                            HomeScreen()
                         }
 
-                        composable("SettingsScreenRoute")
+                        composable("HistoryScreenRoute")
                         {
-                            canNavigateBack = navController.previousBackStackEntry != null
+//                            canNavigateBack = navController.previousBackStackEntry != null
 //                            SettingsScreen(
 //                                onThemeChange = onThemeChange,
 //                                isInSettings = { inSettingsScreen = it }
@@ -251,7 +258,13 @@ fun Router(
 }
 
 
-
+@Preview
+@Composable
+fun DefaultPreview() {
+    EcoCapTheme {
+        HomeScreen()
+    }
+}
 
 
 
