@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.ecocap.ui.Screens.HistoryScreen
 import com.example.ecocap.ui.Screens.HomeScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 
@@ -170,7 +171,7 @@ fun Router(
 
                             //2
                             IconButton(
-                                onClick = { navController.navigate("CaptureScreenRoute")},
+                                onClick = { navController.navigate("HistoryScreenRoute")},
 //                                enabled = canNavigateBack,
                                 modifier = Modifier
                                     .size(56.dp)
@@ -227,6 +228,7 @@ fun Router(
 
                         composable("HistoryScreenRoute")
                         {
+                            HistoryScreen()
 //                            canNavigateBack = navController.previousBackStackEntry != null
 //                            SettingsScreen(
 //                                onThemeChange = onThemeChange,

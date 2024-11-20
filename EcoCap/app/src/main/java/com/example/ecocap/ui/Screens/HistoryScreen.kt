@@ -46,39 +46,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import com.example.ecocap.ML_Kit.getImageLabels
 
 
-val animals = listOf(
-    "Frog",
-    "Tiger",
-    "Elephant",
-    "Penguin",
-    "Panda",
-    "Koala",
-    "Giraffe",
-    "Lion",
-    "Zebra",
-    "Kangaroo",
-    "Polar Bear"
-)
 
 @Composable
-fun HomeScreen(
+fun HistoryScreen(
 //    context: Context,
 ) {
-//    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-//    var topLabel by remember { mutableStateOf<String?>(null) }
-//
-//    val photoPicker = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = {
-//            selectedImageUri = it
-//            if (selectedImageUri != null) {
-//                // Call the asynchronous function and update the state with the result
-//                getImageLabels(context, selectedImageUri!!) { labels ->
-//                    topLabel = labels.maxByOrNull { it.confidence }?.text
-//                }
-//            }
-//        }
-//    )
+
 
     Column(
         modifier = Modifier
@@ -91,28 +64,11 @@ fun HomeScreen(
 //        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "EcoCap",
+            text = "History",
             fontSize = 80.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
-
-        Spacer(modifier = Modifier.height(35.dp))
-
-        Row {
-            Text(
-                text = "DailyStreak: 3",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-//            Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(id = R.drawable.fire),
-                contentDescription = "DailyStreak",
-                modifier = Modifier.height(30.dp)
-            )
-        }
 
         Spacer(modifier = Modifier.height(35.dp))
 
