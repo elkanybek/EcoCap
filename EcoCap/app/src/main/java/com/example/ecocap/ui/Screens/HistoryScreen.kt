@@ -58,7 +58,6 @@ fun HistoryScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 64.dp),
-//        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -66,7 +65,7 @@ fun HistoryScreen(
 
         Text(
             text = "History",
-            fontSize = 60.sp,
+            fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
@@ -79,7 +78,6 @@ fun HistoryScreen(
                 .fillMaxSize()
                 .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
