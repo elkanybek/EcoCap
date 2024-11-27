@@ -51,6 +51,7 @@ import com.example.ecocap.ML_Kit.getImageLabels
 @Composable
 fun HistoryScreen(
 //    context: Context,
+    animals: List<String>
 ) {
 
 
@@ -135,8 +136,6 @@ fun HistoryScreen(
                     }
                 }
             }
-
-
         }
     }
 }
