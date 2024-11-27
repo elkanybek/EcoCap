@@ -2,6 +2,7 @@ package com.example.ecocap
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 //import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -52,7 +53,10 @@ import com.example.ecocap.ui.Screens.HomeScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ecocap.ui.Camera.CaptureImageScreen
+import com.example.ecocap.ui.Camera.CaptureImageViewModel
 
 //class MainActivity : ComponentActivity() {
 //    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -75,12 +79,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-//
-//            val context = this
             var isDarkTheme by remember { mutableStateOf(false) }
+
+            val captureImageViewModel: CaptureImageViewModel by viewModels()
+
             EcoCapTheme(darkTheme = isDarkTheme) {
-                Router(this)
+                Router(this, captureImageViewModel)
             }
         }
     }
@@ -95,12 +99,12 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Router(
-    context: Context
+    context: Context,
+    captureImageViewModel: CaptureImageViewModel
 ) {
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
     var inSettingsScreen by rememberSaveable { mutableStateOf(false) }
-
 
     TopBottomBar(navController, inSettingsScreen) {
         CompositionLocalProvider(LocalNavController provides navController) {
@@ -114,7 +118,10 @@ fun Router(
                 }
                 composable("CaptureScreenRoute") {
                     CaptureImageScreen(
-                        context = context
+                        context = context,
+                        selectedImageUri = captureImageViewModel.selectedImageUri,
+                        imageLabel = captureImageViewModel.topLabel,
+                        setImage = { context: Context, image: Uri? -> captureImageViewModel.processImage(context, image) }
                     )
                 }
                 composable("ScoreScreenRoute/{score}") {

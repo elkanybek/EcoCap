@@ -41,20 +41,17 @@ import com.example.ecocap.ML_Kit.getImageLabels
 @Composable
 fun CaptureImageScreen(
     context: Context,
+    selectedImageUri: Uri?,
+    imageLabel: String?,
+    setImage: (context: Context, image: Uri?) -> Unit
 ) {
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    var topLabel by remember { mutableStateOf<String?>(null) }
+    //var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    //var topLabel by remember { mutableStateOf<String?>(null) }
 
     val photoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
-            selectedImageUri = it
-            if (selectedImageUri != null) {
-                // Call the asynchronous function and update the state with the result
-                getImageLabels(context, selectedImageUri!!) { labels ->
-                    topLabel = labels.maxByOrNull { it.confidence }?.text
-                }
-            }
+            setImage(context, it)
         }
     )
 
@@ -110,7 +107,7 @@ fun CaptureImageScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Display the top label
-        topLabel?.let {
+        imageLabel?.let {
             Text(
                 text = it,
                 fontSize = 20.sp,
