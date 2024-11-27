@@ -43,16 +43,7 @@ fun SettingsScreen() {
     ) {
 
         Spacer(modifier = Modifier.height(60.dp))
-        // Header
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(bottom = 32.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//
-//        }
+
 
         // Title
         Text(

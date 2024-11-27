@@ -1,5 +1,4 @@
 package com.example.ecocap.ui.Screens
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,33 +24,22 @@ import com.example.ecocap.R
 fun ProfileScreen() {
     var username by remember { mutableStateOf("DavyDav") }
     var password by remember { mutableStateOf("********") }
+    var confirmPassword by remember { mutableStateOf("********") }
 
     // Track changes to fields
     var initialUsername by remember { mutableStateOf(username) }
     var initialPassword by remember { mutableStateOf(password) }
-//    var initialTheme by remember { mutableStateOf(isDarkTheme) }
+    var initialConfirmPassword by remember { mutableStateOf(confirmPassword) }
 
-    val isChanged = username != initialUsername || password != initialPassword
+    val isChanged = username != initialUsername || password != initialPassword || confirmPassword != initialConfirmPassword
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .background(Color(0xFF4DB6AC)) // Teal background
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Spacer(modifier = Modifier.height(60.dp))
-        // Header
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(bottom = 32.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//
-//        }
 
         // Title
         Text(
@@ -67,8 +55,7 @@ fun ProfileScreen() {
         EditableSettingsField(
             label = "Username",
             value = username,
-            onValueChange = { username = it },
-
+            onValueChange = { username = it }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -81,18 +68,15 @@ fun ProfileScreen() {
             isPassword = true
         )
 
-        // Password Field
-        EditableSettingsField(
-            label = "Confirm Password",
-            value = password,
-            onValueChange = { password = it },
-            isPassword = true
-        )
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
-
+        // Confirm Password Field
+        EditableSettingsField(
+            label = "Confirm Password",
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            isPassword = true
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -102,6 +86,7 @@ fun ProfileScreen() {
                 // Update initial values
                 initialUsername = username
                 initialPassword = password
+                initialConfirmPassword = confirmPassword
             },
             modifier = Modifier
                 .fillMaxWidth()
