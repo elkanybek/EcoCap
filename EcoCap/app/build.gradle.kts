@@ -103,4 +103,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 }
 }
+dependencies {
+    implementation(libs.androidx.navigation.runtime.ktx)
+}
 
