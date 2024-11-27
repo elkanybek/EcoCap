@@ -1,8 +1,6 @@
 package com.example.ecocap.Data.Dao
 
-import com.example.ecocap.Data.Repository.UserStore
-import com.example.ecocap.Data.Repository.PointStore
-import com.example.ecocap.Data.Repository.QuestStore
+import com.example.ecocap.Data.Database.PointStore
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -10,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface PointDao {
     @Insert
-    suspend fun insert(user: PointStore)
+    suspend fun insert(points: PointStore)
 
-    @Query("SELECT * FROM points")
-    suspend fun getAllPoints(): List<PointStore>
+    @Query("SELECT * FROM points WHERE userId = :userId ")
+    suspend fun getAllPointsFromUser(userId:Int): List<PointStore>
 }

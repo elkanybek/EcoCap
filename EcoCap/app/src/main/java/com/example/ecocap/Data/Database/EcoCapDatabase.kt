@@ -1,8 +1,5 @@
 package com.example.ecocap.Data.Database
 
-import com.example.ecocap.Data.Repository.UserStore
-import com.example.ecocap.Data.Repository.PointStore
-import com.example.ecocap.Data.Repository.QuestStore
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
