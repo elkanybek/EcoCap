@@ -4,6 +4,7 @@ import com.example.ecocap.Data.Database.UserStore
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.ecocap.Data.Database.PointStore
 
 @Dao
@@ -13,4 +14,7 @@ interface UserDao {
 
     @Query("SELECT totalPoints FROM users WHERE id = :userId ")
     suspend fun getPointsFromId(userId:Int): Int
+
+    @Update
+    suspend fun update(user: UserStore)
 }
