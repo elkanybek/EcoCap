@@ -9,7 +9,4 @@ import androidx.room.Query
 interface UserDao {
     @Insert
     suspend fun insert(user: UserStore)
-
-    @Query("SELECT * FROM users")
-    suspend fun getAllUsers(): List<UserStore>
 }

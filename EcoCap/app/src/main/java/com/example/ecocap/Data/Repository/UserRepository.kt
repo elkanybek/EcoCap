@@ -1,4 +1,11 @@
 package com.example.ecocap.Data.Repository
 
-class UserRepository {
+import com.example.ecocap.Data.Dao.UserDao
+import com.example.ecocap.Data.Database.PointStore
+import com.example.ecocap.Data.Database.UserStore
+
+class UserRepository(private val userDao: UserDao) {
+    suspend fun insertUser(user: UserStore) {
+        userDao.insert(user)
+    }
 }

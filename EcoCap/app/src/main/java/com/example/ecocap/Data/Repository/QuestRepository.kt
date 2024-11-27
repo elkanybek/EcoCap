@@ -9,4 +9,8 @@ class QuestRepository(private val questDao: QuestDao) {
     suspend fun getAllQuests(): List<QuestStore> {
         return questDao.getAllQuests()
     }
+
+    suspend fun getRandomQuest(): QuestStore{
+        return questDao.getRandomQuest()
+    }
 }
