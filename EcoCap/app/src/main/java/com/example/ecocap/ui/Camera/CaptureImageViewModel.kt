@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.example.ecocap.ML_Kit.getImageLabels
 
 class CaptureImageViewModel : ViewModel(){
+    var sessionId: Int = 1
     var selectedImageUri by mutableStateOf<Uri?>(null)
     var topLabel by mutableStateOf<String?>(null)
 

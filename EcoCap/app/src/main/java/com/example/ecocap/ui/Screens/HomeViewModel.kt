@@ -6,6 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class HomeViewModel: ViewModel() {
+    val questsAmount = 3
+    var sessionId: Int = 1
+
     val animals = listOf(
         "Frog",
         "Tiger",
