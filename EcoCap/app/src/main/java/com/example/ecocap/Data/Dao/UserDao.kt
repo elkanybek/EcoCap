@@ -1,17 +1,20 @@
 package com.example.ecocap.Data.Dao
 
-import com.example.ecocap.Data.Repository.UserStore
-import com.example.ecocap.Data.Repository.PointStore
-import com.example.ecocap.Data.Repository.QuestStore
+import com.example.ecocap.Data.Database.UserStore
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
+import com.example.ecocap.Data.Database.PointStore
 
 @Dao
 interface UserDao {
     @Insert
     suspend fun insert(user: UserStore)
 
-    @Query("SELECT * FROM users")
-    suspend fun getAllUsers(): List<UserStore>
+    @Query("SELECT totalPoints FROM users WHERE id = :userId ")
+    suspend fun getPointsFromId(userId:Int): Int
+
+    @Update
+    suspend fun update(user: UserStore)
 }

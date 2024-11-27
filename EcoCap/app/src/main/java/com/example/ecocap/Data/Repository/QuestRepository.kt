@@ -1,7 +1,5 @@
 import com.example.ecocap.Data.Dao.QuestDao
-import com.example.ecocap.Data.Repository.UserStore
-import com.example.ecocap.Data.Repository.PointStore
-import com.example.ecocap.Data.Repository.QuestStore
+import com.example.ecocap.Data.Database.QuestStore
 
 class QuestRepository(private val questDao: QuestDao) {
     suspend fun insertQuests(quests: List<QuestStore>) {
@@ -10,5 +8,9 @@ class QuestRepository(private val questDao: QuestDao) {
 
     suspend fun getAllQuests(): List<QuestStore> {
         return questDao.getAllQuests()
+    }
+
+    suspend fun getRandomQuest(): QuestStore{
+        return questDao.getRandomQuest()
     }
 }
