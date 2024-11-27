@@ -51,6 +51,7 @@ import com.example.ecocap.ML_Kit.getImageLabels
 @Composable
 fun ResultScreen(
 //    context: Context,
+    animals: List<String>
 ) {
 
 

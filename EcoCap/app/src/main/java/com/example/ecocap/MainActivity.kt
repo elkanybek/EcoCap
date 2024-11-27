@@ -57,6 +57,9 @@ import androidx.activity.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ecocap.ui.Camera.CaptureImageScreen
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
+import com.example.ecocap.ui.Screens.HistoryViewModel
+import com.example.ecocap.ui.Screens.HomeViewModel
+import com.example.ecocap.ui.Screens.ResultViewModel
 
 //class MainActivity : ComponentActivity() {
 //    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -79,12 +82,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val homeViewModel: HomeViewModel by viewModels()
+            val historyViewModel: HistoryViewModel by viewModels()
+            val resultViewModel: ResultViewModel by viewModels()
             var isDarkTheme by remember { mutableStateOf(false) }
 
             val captureImageViewModel: CaptureImageViewModel by viewModels()
 
             EcoCapTheme(darkTheme = isDarkTheme) {
-                Router(this, captureImageViewModel)
+                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel)
             }
         }
     }
@@ -100,7 +106,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Router(
     context: Context,
-    captureImageViewModel: CaptureImageViewModel
+    captureImageViewModel: CaptureImageViewModel,
+    homeViewModel: HomeViewModel,
+    historyViewModel: HistoryViewModel,
+    resultViewModel: ResultViewModel
 ) {
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
@@ -111,10 +120,10 @@ fun Router(
             NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
                 composable("HomeScreenRoute") {
-                    HomeScreen()
+                    HomeScreen(animals = homeViewModel.animals, dailyStreak = homeViewModel.dailyStreak)
                 }
                 composable("HistoryScreenRoute") {
-                    HistoryScreen()
+                    HistoryScreen(animals = historyViewModel.animals)
                 }
                 composable("CaptureScreenRoute") {
                     CaptureImageScreen(
@@ -338,7 +347,9 @@ fun TopBar(navController: NavController, inSettingsScreen: Boolean) {
                 Image(
                     painter = painterResource(R.drawable.logo),
                     contentDescription = "Settings",
-                    modifier = Modifier.size(300.dp).padding(0.dp)
+                    modifier = Modifier
+                        .size(300.dp)
+                        .padding(0.dp)
                 )
             }
         }
@@ -356,31 +367,41 @@ fun BottomBar(navController: NavController) {
             ) {
                 IconButton(
                     onClick = { navController.navigate("HomeScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
                 }
                 IconButton(
                     onClick = { navController.navigate("HistoryScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
                 }
                 IconButton(
                     onClick = { navController.navigate("CaptureScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.AddCircle, contentDescription = "Capture", Modifier.size(40.dp))
                 }
                 IconButton(
                     onClick = { },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
                 }
                 IconButton(
                     onClick = { },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
                 }
@@ -394,7 +415,7 @@ fun BottomBar(navController: NavController) {
 @Composable
 fun DefaultPreview() {
     EcoCapTheme {
-        HomeScreen()
+//        HomeScreen()
     }
 }
 
