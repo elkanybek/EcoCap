@@ -8,4 +8,8 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun insertUser(user: UserStore) {
         userDao.insert(user)
     }
+
+    suspend fun getUserPoints(userId: Int){
+        userDao.getPointsFromId(userId)
+    }
 }
