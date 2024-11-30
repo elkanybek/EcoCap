@@ -25,15 +25,20 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
+import com.example.ecocap.Data.Database.QuestStore
 
 @Composable
 fun HomeScreen(
     animals: List<String>,
-    dailyStreak: Int
+    dailyStreak: Int,
+    quests:  List<QuestStore>
 ) {
     Column(
         modifier = Modifier
@@ -77,6 +82,16 @@ fun HomeScreen(
 
         )
 
+//        val quest = remember { mutableStateOf<QuestStore?>(null) }
+//
+//        LaunchedEffect(Unit) {
+//            quest.value = getQuest()
+//        }
+//
+//        Text(
+//            text = "test: ${quest.value}"
+//        )
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,7 +101,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
-            items(10) { index ->
+            items(quests.size) { index ->
                 Box(
                     modifier = Modifier
                         .width(375.dp)
@@ -98,7 +113,7 @@ fun HomeScreen(
                 ) {
                     Column {
                         Text(
-                            text = "${animals[index]}",
+                            text = quests[index].name,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black ,
@@ -108,7 +123,7 @@ fun HomeScreen(
                                 .padding(8.dp)
                         )
                         Text(
-                            text = "Find a ${animals[index]} out in the wilderness, and upload it to EcoCap",
+                            text = "Find a ${quests[index].name} out in the wilderness, and upload it to EcoCap",
                             fontSize = 20.sp,
                             color = Color.Black ,
                             fontFamily = FontFamily.Default,
@@ -116,7 +131,6 @@ fun HomeScreen(
                                 .align(Alignment.Start)
                                 .padding(8.dp),
                             softWrap = true
-
                         )
                     }
                 }

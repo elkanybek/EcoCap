@@ -1,5 +1,6 @@
 package com.example.ecocap
 
+import QuestRepository
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
@@ -54,12 +55,20 @@ import com.example.ecocap.ui.theme.EcoCapTheme
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ecocap.Data.Database.DatabaseProvider
+import com.example.ecocap.Data.Database.QuestStore
+import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageScreen
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
 import com.example.ecocap.ui.Screens.HistoryViewModel
 import com.example.ecocap.ui.Screens.HomeViewModel
 import com.example.ecocap.ui.Screens.ResultViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 //class MainActivity : ComponentActivity() {
 //    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -82,12 +91,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val homeViewModel: HomeViewModel by viewModels()
+            val db = DatabaseProvider.AppDatabase.getInstance(applicationContext)
+            val questRepository = QuestRepository(db.questDao())
+
+            LaunchedEffect(Unit) {
+                launch(Dispatchers.IO) {
+                    questRepository.insertQuests(quests)
+                }
+            }
+
+            val homeViewModel: HomeViewModel by viewModels{
+                HomeViewModelFactory(questRepository)
+            }
             val historyViewModel: HistoryViewModel by viewModels()
             val resultViewModel: ResultViewModel by viewModels()
             var isDarkTheme by remember { mutableStateOf(false) }
 
             val captureImageViewModel: CaptureImageViewModel by viewModels()
+
+
 
             EcoCapTheme(darkTheme = isDarkTheme) {
                 Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel)
@@ -115,12 +137,21 @@ fun Router(
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
     var inSettingsScreen by rememberSaveable { mutableStateOf(false) }
 
-    TopBottomBar(navController, inSettingsScreen) {
+    var quests by remember { mutableStateOf<List<QuestStore>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        quests = homeViewModel.getQuests()
+    }
+
+    TopBottomBar(navController) {
         CompositionLocalProvider(LocalNavController provides navController) {
             NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
                 composable("HomeScreenRoute") {
-                    HomeScreen(animals = homeViewModel.animals, dailyStreak = homeViewModel.dailyStreak)
+                    HomeScreen(animals = homeViewModel.animals,
+                        dailyStreak = homeViewModel.dailyStreak,
+                        quests
+                    )
                 }
                 composable("HistoryScreenRoute") {
                     HistoryScreen(animals = historyViewModel.animals)
@@ -143,7 +174,15 @@ fun Router(
 
 }
 
-
+class HomeViewModelFactory(private val questRepository: QuestRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeViewModel(questRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
 
 
 //@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -318,11 +357,11 @@ fun Router(
 @Composable
 fun TopBottomBar(
     navController: NavController,
-    inSettingsScreen: Boolean,
+    //inSettingsScreen: Boolean,
     content: @Composable () -> Unit
 ) {
     Scaffold(
-        topBar = { TopBar(navController, inSettingsScreen) },
+        topBar = { TopBar(navController) },
         bottomBar = { BottomBar(navController) },
         content = { content() }
     )
@@ -330,7 +369,7 @@ fun TopBottomBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController, inSettingsScreen: Boolean) {
+fun TopBar(navController: NavController) {
     TopAppBar(
         modifier = Modifier.padding(0.dp),
         colors = topAppBarColors(
@@ -342,7 +381,7 @@ fun TopBar(navController: NavController, inSettingsScreen: Boolean) {
         actions = {
             IconButton(
                 onClick = { navController.navigate("SettingsScreenRoute") },
-                enabled = !inSettingsScreen
+                //enabled = !inSettingsScreen
             ) {
                 Image(
                     painter = painterResource(R.drawable.logo),
