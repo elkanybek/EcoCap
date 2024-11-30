@@ -25,4 +25,8 @@ class HistoryViewModel(val pointRepository: PointRepository): ViewModel() {
     suspend fun getQuests(userId: Int): List<PointStore>{
         return pointRepository.getAllPoints(userId)
     }
+
+    suspend fun addQuest(pointStore: PointStore){
+        pointRepository.insertPoints(pointStore)
+    }
 }

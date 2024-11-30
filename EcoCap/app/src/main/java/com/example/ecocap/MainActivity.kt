@@ -67,6 +67,7 @@ import com.example.ecocap.ui.Camera.CaptureImageScreen
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
 import com.example.ecocap.ui.Screens.HistoryViewModel
 import com.example.ecocap.ui.Screens.HomeViewModel
+import com.example.ecocap.ui.Screens.ResultScreen
 import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -108,7 +109,9 @@ class MainActivity : ComponentActivity() {
             val historyViewModel: HistoryViewModel by viewModels{
                 HistoryViewModelFactory(pointRepository)
             }
-            val resultViewModel: ResultViewModel by viewModels()
+            val resultViewModel: ResultViewModel by viewModels{
+                ResultViewModelFactory(pointRepository)
+            }
             var isDarkTheme by remember { mutableStateOf(false) }
 
             val captureImageViewModel: CaptureImageViewModel by viewModels()
@@ -165,11 +168,28 @@ fun Router(
                         context = context,
                         selectedImageUri = captureImageViewModel.selectedImageUri,
                         imageLabel = captureImageViewModel.topLabel,
-                        setImage = { context: Context, image: Uri? -> captureImageViewModel.processImage(context, image) }
+                        setImage = { context: Context, image: Uri? ->
+                            captureImageViewModel.processImage(context, image)
+                            navController.navigate("ResultScreenRoute")
+                        }
                     )
                 }
                 composable("ScoreScreenRoute/{score}") {
                     val score: String = it.arguments?.getString("score") ?: ""
+                }
+                composable("ResultScreenRoute"){
+                    LaunchedEffect(Unit) {
+                        resultViewModel.checkResult(
+                            homeViewModel.quests,
+                            captureImageViewModel.inputLabelList
+                        )
+                    }
+
+                    ResultScreen(
+                        animals = resultViewModel.animals,
+                        result = resultViewModel.result,
+                        pointsGained = resultViewModel.pointsGained,
+                    )
                 }
             }
         }
@@ -193,6 +213,16 @@ class HistoryViewModelFactory(private val pointRepository: PointRepository) : Vi
         if (modelClass.isAssignableFrom(HistoryViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return HistoryViewModel(pointRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class ResultViewModelFactory(private val pointRepository: PointRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ResultViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ResultViewModel(pointRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

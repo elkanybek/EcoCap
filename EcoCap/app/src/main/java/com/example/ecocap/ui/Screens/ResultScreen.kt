@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
+import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.ML_Kit.getImageLabels
 
 
@@ -51,7 +52,9 @@ import com.example.ecocap.ML_Kit.getImageLabels
 @Composable
 fun ResultScreen(
 //    context: Context,
-    animals: List<String>
+    animals: List<String>,
+    result: Boolean,
+    pointsGained: Int,
 ) {
 
 
@@ -66,7 +69,7 @@ fun ResultScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "History",
+            text = "Result",
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
@@ -74,71 +77,101 @@ fun ResultScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        if(result){
+            Text(
+                text = "Quest Completed",
+                fontSize = 30.sp,
+                color = Color.Black
+            )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-
-            horizontalAlignment = Alignment.CenterHorizontally,
-            userScrollEnabled = true,
-        ) {
-            items(10) { index ->
-                Box(
-                    modifier = Modifier
-                        .width(375.dp)
-                        .wrapContentHeight()
-                        .padding(8.dp)
-                        .shadow(8.dp, RoundedCornerShape(8.dp))
-                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest) // Background after clip
-                ) {
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ){
-                        Column {
-                            Text(
-                                text = "${animals[index]}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                fontFamily = FontFamily.Default,
-                                modifier = Modifier
-                                    .align(Alignment.Start)
-                                    .padding(8.dp)
-                            )
-                            Text(
-                                text = "+200",
-                                fontSize = 20.sp,
-                                color = Color.Black,
-                                fontFamily = FontFamily.Default,
-                                modifier = Modifier
-                                    .align(Alignment.Start)
-                                    .padding(8.dp),
-                                softWrap = true
-
-                            )
-                        }
-
-                        Image(
-                            painter = painterResource(id = R.drawable.flower),
-                            contentDescription = "Placeholder Image",
-                            modifier = Modifier
-                                .height(80.dp)
-                                .width(80.dp)
-                                .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+            Image(
+                painter = painterResource(id = R.drawable.flower),
+                contentDescription = "Placeholder Image",
+                modifier = Modifier
+                    .height(80.dp)
+                    .width(80.dp)
+                    .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
 //                                .align(Alignment.End)
-                        )
-                    }
-                }
-            }
-
-
+            )
+            Text(
+                text = "+200",
+                fontSize = 25.sp,
+                color = Color.Black
+            )
         }
+        else{
+            Text(
+                text = "No valid quest was detected",
+                fontSize = 30.sp,
+                color = Color.Black
+            )
+        }
+
+
+//        LazyColumn(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(8.dp),
+//            verticalArrangement = Arrangement.spacedBy(8.dp),
+//
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            userScrollEnabled = true,
+//        ) {
+//            items(10) { index ->
+//                Box(
+//                    modifier = Modifier
+//                        .width(375.dp)
+//                        .wrapContentHeight()
+//                        .padding(8.dp)
+//                        .shadow(8.dp, RoundedCornerShape(8.dp))
+//                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+//                        .background(MaterialTheme.colorScheme.surfaceContainerHighest) // Background after clip
+//                ) {
+//                    Row (
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(8.dp),
+//                        horizontalArrangement = Arrangement.SpaceBetween
+//                    ){
+//                        Column {
+//                            Text(
+//                                text = "${animals[index]}",
+//                                fontSize = 20.sp,
+//                                fontWeight = FontWeight.Bold,
+//                                color = Color.Black,
+//                                fontFamily = FontFamily.Default,
+//                                modifier = Modifier
+//                                    .align(Alignment.Start)
+//                                    .padding(8.dp)
+//                            )
+//                            Text(
+//                                text = "+200",
+//                                fontSize = 20.sp,
+//                                color = Color.Black,
+//                                fontFamily = FontFamily.Default,
+//                                modifier = Modifier
+//                                    .align(Alignment.Start)
+//                                    .padding(8.dp),
+//                                softWrap = true
+//
+//                            )
+//                        }
+//
+//                        Image(
+//                            painter = painterResource(id = R.drawable.flower),
+//                            contentDescription = "Placeholder Image",
+//                            modifier = Modifier
+//                                .height(80.dp)
+//                                .width(80.dp)
+//                                .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+////                                .align(Alignment.End)
+//                        )
+//                    }
+//                }
+//            }
+//
+//
+//        }
     }
 }
 
