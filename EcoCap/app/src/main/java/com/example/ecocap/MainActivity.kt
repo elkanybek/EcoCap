@@ -61,6 +61,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ecocap.Data.Database.DatabaseProvider
 import com.example.ecocap.Data.Database.QuestStore
+import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageScreen
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
@@ -93,6 +94,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val db = DatabaseProvider.AppDatabase.getInstance(applicationContext)
             val questRepository = QuestRepository(db.questDao())
+            val pointRepository = PointRepository(db.pointDao())
 
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
@@ -103,7 +105,9 @@ class MainActivity : ComponentActivity() {
             val homeViewModel: HomeViewModel by viewModels{
                 HomeViewModelFactory(questRepository)
             }
-            val historyViewModel: HistoryViewModel by viewModels()
+            val historyViewModel: HistoryViewModel by viewModels{
+                HistoryViewModelFactory(pointRepository)
+            }
             val resultViewModel: ResultViewModel by viewModels()
             var isDarkTheme by remember { mutableStateOf(false) }
 
@@ -131,7 +135,7 @@ fun Router(
     captureImageViewModel: CaptureImageViewModel,
     homeViewModel: HomeViewModel,
     historyViewModel: HistoryViewModel,
-    resultViewModel: ResultViewModel
+    resultViewModel: ResultViewModel,
 ) {
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
@@ -154,7 +158,7 @@ fun Router(
                     )
                 }
                 composable("HistoryScreenRoute") {
-                    HistoryScreen(animals = historyViewModel.animals)
+                    HistoryScreen(getHistory = {userId: Int -> historyViewModel.getQuests(userId)})
                 }
                 composable("CaptureScreenRoute") {
                     CaptureImageScreen(
@@ -179,6 +183,16 @@ class HomeViewModelFactory(private val questRepository: QuestRepository) : ViewM
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return HomeViewModel(questRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class HistoryViewModelFactory(private val pointRepository: PointRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HistoryViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HistoryViewModel(pointRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

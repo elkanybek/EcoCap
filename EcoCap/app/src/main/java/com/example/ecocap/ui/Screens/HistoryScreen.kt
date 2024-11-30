@@ -40,20 +40,26 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
+import com.example.ecocap.Data.Database.PointStore
+import com.example.ecocap.Data.Database.QuestStore
 import com.example.ecocap.ML_Kit.getImageLabels
 
 
 
 @Composable
 fun HistoryScreen(
-//    context: Context,
-    animals: List<String>
+    getHistory: suspend (userId: Int) -> List<PointStore>
 ) {
+    var history by remember { mutableStateOf<List<PointStore>>(emptyList()) }
 
+    LaunchedEffect(Unit) {
+        history = getHistory(1)
+    }
 
     Column(
         modifier = Modifier
@@ -84,7 +90,7 @@ fun HistoryScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
-            items(10) { index ->
+            items(history.size) { index ->
                 Box(
                     modifier = Modifier
                         .width(375.dp)
@@ -102,7 +108,7 @@ fun HistoryScreen(
                     ){
                         Column {
                             Text(
-                                text = "${animals[index]}",
+                                text = "${history[index]}",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black,
@@ -112,7 +118,7 @@ fun HistoryScreen(
                                     .padding(8.dp)
                             )
                             Text(
-                                text = "+200",
+                                text = "+${history[index].scoreGained}",
                                 fontSize = 20.sp,
                                 color = Color.Black,
                                 fontFamily = FontFamily.Default,
@@ -125,6 +131,7 @@ fun HistoryScreen(
                         }
 
                         Image(
+                            //to do: find out how to show history stored image
                             painter = painterResource(id = R.drawable.flower),
                             contentDescription = "Placeholder Image",
                             modifier = Modifier
