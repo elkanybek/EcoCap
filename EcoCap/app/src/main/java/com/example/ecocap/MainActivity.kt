@@ -209,9 +209,8 @@ fun Router(
                     }
 
                     ResultScreen(
-                        animals = resultViewModel.animals,
-                        result = resultViewModel.result,
-                        pointsGained = resultViewModel.pointsGained
+                        image = resultViewModel.imageBytes,
+                        result = resultViewModel.result
                     )
                 }
             }

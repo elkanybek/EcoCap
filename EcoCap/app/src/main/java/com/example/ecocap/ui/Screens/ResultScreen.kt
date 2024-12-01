@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.ecocap.R
 import android.content.Context
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.ecocap.Data.Database.PointStore
@@ -51,10 +53,8 @@ import com.example.ecocap.ML_Kit.getImageLabels
 
 @Composable
 fun ResultScreen(
-//    context: Context,
-    animals: List<String>,
+    image: ByteArray,
     result: Boolean,
-    pointsGained: Int,
 ) {
 
 
@@ -84,15 +84,25 @@ fun ResultScreen(
                 color = Color.Black
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.flower),
-                contentDescription = "Placeholder Image",
-                modifier = Modifier
-                    .height(80.dp)
-                    .width(80.dp)
-                    .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-//                                .align(Alignment.End)
-            )
+            if (image.isNotEmpty()) {
+                val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
+                Image(
+                    bitmap = bitmap.asImageBitmap(),
+                    contentDescription = "Quest Image",
+                    modifier = Modifier
+                        .height(80.dp)
+                        .width(80.dp)
+                )
+            } else {
+                // If no image is provided, show a placeholder image
+                Image(
+                    painter = painterResource(id = R.drawable.flower),
+                    contentDescription = "Placeholder Image",
+                    modifier = Modifier
+                        .height(80.dp)
+                        .width(80.dp)
+                )
+            }
             Text(
                 text = "+200",
                 fontSize = 25.sp,

@@ -19,6 +19,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
     var sessionId: Int = 1
     var result by mutableStateOf(false)
     var pointsGained by mutableStateOf(0)
+    var imageBytes by mutableStateOf<ByteArray>(ByteArray(0))
 
     val animals = listOf(
         "Frog",
@@ -43,7 +44,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
 //                if(true){ // for testing
                     result = true
                     pointsGained = 200
-                    var imageBytes = uriToBytes(uri = image, context)
+                    imageBytes = uriToBytes(uri = image, context)
 
                     val pointStore: PointStore = PointStore(
                         userId = sessionId,
