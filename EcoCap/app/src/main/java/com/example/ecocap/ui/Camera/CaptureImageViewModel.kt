@@ -19,16 +19,21 @@ class CaptureImageViewModel() : ViewModel(){
     var selectedImageUri by mutableStateOf<Uri?>(null)
     var topLabel by mutableStateOf<String?>(null)
     var inputLabelList: List<ImageLabel> = mutableListOf()
+    var topLabels by mutableStateOf<List<String>>(listOf())
 
 
 
     fun processImage(context: Context, image: Uri?) {
         selectedImageUri = image
         if (selectedImageUri != null) {
+            topLabels = emptyList()
             // Call the asynchronous function and update the state with the result
             getImageLabels(context, selectedImageUri!!) { labels ->
                 topLabel = labels.maxByOrNull { it.confidence }?.text
                 inputLabelList = labels
+                for(label in inputLabelList){
+                    topLabels += label.text
+                }
             }
         }
         val temp = "test"

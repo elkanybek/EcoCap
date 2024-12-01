@@ -73,6 +73,9 @@ import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.collectAsState
+import com.example.ecocap.Data.Database.PointStore
+import com.example.ecocap.Data.Database.UserStore
+import com.example.ecocap.Data.Repository.UserRepository
 import kotlinx.coroutines.delay
 
 //class MainActivity : ComponentActivity() {
@@ -99,10 +102,21 @@ class MainActivity : ComponentActivity() {
             val db = DatabaseProvider.AppDatabase.getInstance(applicationContext)
             val questRepository = QuestRepository(db.questDao())
             val pointRepository = PointRepository(db.pointDao())
+            val userRepository = UserRepository(db.userDao())
 
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
                     questRepository.insertQuests(quests)
+                }
+            }
+            val user: UserStore = UserStore(
+                id = 1,
+                name = "Bob",
+                totalPoints = 0
+            )
+            LaunchedEffect(Unit) {
+                launch(Dispatchers.IO) {
+                    userRepository.insertUser(user)
                 }
             }
 
@@ -170,10 +184,11 @@ fun Router(
                     CaptureImageScreen(
                         context = context,
                         selectedImageUri = captureImageViewModel.selectedImageUri,
-                        imageLabel = captureImageViewModel.topLabel,
+                        imageLabel = captureImageViewModel.topLabels,
                         setImage = { context: Context, image: Uri? ->
                             captureImageViewModel.processImage(context, image)
                         },
+
                         checkResult = {
                             navController.navigate("ResultScreenRoute")
                         }

@@ -46,7 +46,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
                         streakMultiplier = 1.0,
                         scoreGained = 200
                     )
-                    //pointRepository.insertPoints(pointStore)
+                    pointRepository.insertPoints(pointStore)
                     return true
                 }
             }

@@ -42,7 +42,7 @@ import com.example.ecocap.ML_Kit.getImageLabels
 fun CaptureImageScreen(
     context: Context,
     selectedImageUri: Uri?,
-    imageLabel: String?,
+    imageLabel: List<String>?,
     setImage: (context: Context, image: Uri?) -> Unit,
     checkResult: () -> Unit
 ) {
@@ -109,13 +109,16 @@ fun CaptureImageScreen(
 
         // Display the top label
         imageLabel?.let {
-            Text(
-                text = it,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Blue
-            )
+//            if (it.size >= 3) {
+                Text(
+                    text = it.joinToString(", "),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Blue
+                )
+//            }
         }
+
 
         if (selectedImageUri != null){
             Button(onClick = {checkResult()}){
