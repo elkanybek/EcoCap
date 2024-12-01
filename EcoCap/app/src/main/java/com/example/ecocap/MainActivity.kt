@@ -5,7 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-//import android.os.Bundle
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.slideInHorizontally
@@ -13,6 +15,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,15 +23,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.twotone.AddCircle
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
@@ -42,6 +49,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,8 +57,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.ecocap.ui.Camera.CaptureImageScreen
 import com.example.ecocap.ui.Screens.HistoryScreen
 import com.example.ecocap.ui.Screens.HomeScreen
+import com.example.ecocap.ui.Screens.ProfileScreen
+import com.example.ecocap.ui.Screens.SettingsScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -78,20 +89,9 @@ import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.UserRepository
 import kotlinx.coroutines.delay
 
-//class MainActivity : ComponentActivity() {
-//    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        setContent {
-//            CaptureImageScreen(
-//                context = this
-//            )
-//        }
-//    }
-//}
-
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }
+
+
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -171,6 +171,7 @@ fun Router(
         CompositionLocalProvider(LocalNavController provides navController) {
             NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
+                //NavBar
                 composable("HomeScreenRoute") {
                     HomeScreen(animals = homeViewModel.animals,
                         dailyStreak = homeViewModel.dailyStreak,
@@ -194,6 +195,15 @@ fun Router(
                         }
                     )
                 }
+                composable("ProfileScreenRoute") {
+                    ProfileScreen()
+                }
+                composable("SettingsScreenRoute") {
+                    SettingsScreen()
+                }
+
+
+
                 composable("ScoreScreenRoute/{score}") {
                     val score: String = it.arguments?.getString("score") ?: ""
                 }
@@ -495,18 +505,14 @@ fun BottomBar(navController: NavController) {
                     Icon(Icons.Filled.AddCircle, contentDescription = "Capture", Modifier.size(40.dp))
                 }
                 IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
+                    onClick = { navController.navigate("ProfileScreenRoute") },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
                 }
                 IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
+                    onClick = { navController.navigate("SettingsScreenRoute") },
+                    modifier = Modifier.size(56.dp).clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
                 }
