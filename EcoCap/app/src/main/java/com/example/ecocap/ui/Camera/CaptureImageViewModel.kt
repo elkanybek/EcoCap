@@ -31,5 +31,6 @@ class CaptureImageViewModel() : ViewModel(){
                 inputLabelList = labels
             }
         }
+        val temp = "test"
     }
 }

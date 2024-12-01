@@ -43,7 +43,8 @@ fun CaptureImageScreen(
     context: Context,
     selectedImageUri: Uri?,
     imageLabel: String?,
-    setImage: (context: Context, image: Uri?) -> Unit
+    setImage: (context: Context, image: Uri?) -> Unit,
+    checkResult: () -> Unit
 ) {
     //var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     //var topLabel by remember { mutableStateOf<String?>(null) }
@@ -114,6 +115,12 @@ fun CaptureImageScreen(
                 fontWeight = FontWeight.Bold,
                 color = Color.Blue
             )
+        }
+
+        if (selectedImageUri != null){
+            Button(onClick = {checkResult()}){
+                Text("Check Result")
+            }
         }
     }
 }

@@ -8,6 +8,8 @@ import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.Data.Database.QuestStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.google.mlkit.vision.label.ImageLabel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ResultViewModel(private val pointRepository: PointRepository): ViewModel() {
     var sessionId: Int = 1
@@ -34,7 +36,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
         for(quest in quests){
             for(label in labels){
                 //if(quest.name == label.text && label.confidence > 0.2){
-                if(true){
+                if(true){ // for testing
                     result = true
                     pointsGained = 200
 
@@ -44,7 +46,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
                         streakMultiplier = 1.0,
                         scoreGained = 200
                     )
-                    pointRepository.insertPoints(pointStore)
+                    //pointRepository.insertPoints(pointStore)
                     return true
                 }
             }

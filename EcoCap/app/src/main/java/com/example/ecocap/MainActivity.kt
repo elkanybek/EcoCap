@@ -56,6 +56,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -71,6 +72,8 @@ import com.example.ecocap.ui.Screens.ResultScreen
 import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.collectAsState
+import kotlinx.coroutines.delay
 
 //class MainActivity : ComponentActivity() {
 //    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -130,7 +133,7 @@ class MainActivity : ComponentActivity() {
  * Handles navigation between screens.
  *
  */
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Router(
@@ -170,6 +173,8 @@ fun Router(
                         imageLabel = captureImageViewModel.topLabel,
                         setImage = { context: Context, image: Uri? ->
                             captureImageViewModel.processImage(context, image)
+                        },
+                        checkResult = {
                             navController.navigate("ResultScreenRoute")
                         }
                     )
@@ -178,8 +183,9 @@ fun Router(
                     val score: String = it.arguments?.getString("score") ?: ""
                 }
                 composable("ResultScreenRoute"){
-                    LaunchedEffect(Unit) {
-                        resultViewModel.checkResult(
+                    var result by mutableStateOf<Boolean>(false)
+                    LaunchedEffect(result) {
+                        result = resultViewModel.checkResult(
                             homeViewModel.quests,
                             captureImageViewModel.inputLabelList
                         )
@@ -188,7 +194,7 @@ fun Router(
                     ResultScreen(
                         animals = resultViewModel.animals,
                         result = resultViewModel.result,
-                        pointsGained = resultViewModel.pointsGained,
+                        pointsGained = resultViewModel.pointsGained
                     )
                 }
             }
