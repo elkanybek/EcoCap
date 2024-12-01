@@ -18,6 +18,7 @@ import androidx.room.ForeignKey
 data class PointStore (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val userId: Int,
+    val questName: String,
     val image: String,
     val streakMultiplier: Double,
     val scoreGained: Int

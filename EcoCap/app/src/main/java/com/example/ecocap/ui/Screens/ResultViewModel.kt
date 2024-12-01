@@ -35,13 +35,14 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
         result = false
         for(quest in quests){
             for(label in labels){
-                //if(quest.name == label.text && label.confidence > 0.2){
-                if(true){ // for testing
+                if(quest.name == label.text && label.confidence > 0.2){
+//                if(true){ // for testing
                     result = true
                     pointsGained = 200
 
                     val pointStore: PointStore = PointStore(
                         userId = sessionId,
+                        questName = quest.name,
                         image = "empty",
                         streakMultiplier = 1.0,
                         scoreGained = 200

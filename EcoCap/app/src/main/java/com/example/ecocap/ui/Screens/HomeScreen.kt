@@ -123,7 +123,7 @@ fun HomeScreen(
                                 .padding(8.dp)
                         )
                         Text(
-                            text = "Find a ${quests[index].name} out in the wilderness, and upload it to EcoCap",
+                            text = "Capture ${quests[index].name} out in the wilderness, and upload it to EcoCap",
                             fontSize = 20.sp,
                             color = Color.Black ,
                             fontFamily = FontFamily.Default,

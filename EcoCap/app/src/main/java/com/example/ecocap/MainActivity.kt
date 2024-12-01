@@ -109,16 +109,16 @@ class MainActivity : ComponentActivity() {
                     questRepository.insertQuests(quests)
                 }
             }
-            val user: UserStore = UserStore(
-                id = 1,
-                name = "Bob",
-                totalPoints = 0
-            )
-            LaunchedEffect(Unit) {
-                launch(Dispatchers.IO) {
-                    userRepository.insertUser(user)
-                }
-            }
+//            val user: UserStore = UserStore(
+//                id = 1,
+//                name = "Bob",
+//                totalPoints = 0
+//            )
+//            LaunchedEffect(Unit) {
+//                launch(Dispatchers.IO) {
+//                    userRepository.insertUser(user)
+//                }
+//            }
 
             val homeViewModel: HomeViewModel by viewModels{
                 HomeViewModelFactory(questRepository)
@@ -178,7 +178,7 @@ fun Router(
                     )
                 }
                 composable("HistoryScreenRoute") {
-                    HistoryScreen(getHistory = {userId: Int -> historyViewModel.getQuests(userId)})
+                    HistoryScreen(getHistory = {userId: Int -> historyViewModel.getPoints(userId)})
                 }
                 composable("CaptureScreenRoute") {
                     CaptureImageScreen(

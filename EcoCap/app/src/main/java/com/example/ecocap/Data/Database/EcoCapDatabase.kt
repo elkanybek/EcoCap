@@ -9,7 +9,7 @@ import com.example.ecocap.Data.Dao.QuestDao
 import com.example.ecocap.Data.Dao.UserDao
 
 object DatabaseProvider {
-    @Database(entities = [UserStore::class, PointStore::class, QuestStore::class], version = 1)
+    @Database(entities = [UserStore::class, PointStore::class, QuestStore::class], version = 2)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun userDao(): UserDao
         abstract fun pointDao(): PointDao

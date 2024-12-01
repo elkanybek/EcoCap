@@ -22,7 +22,7 @@ class HistoryViewModel(val pointRepository: PointRepository): ViewModel() {
         "Polar Bear"
     )
 
-    suspend fun getQuests(userId: Int): List<PointStore>{
+    suspend fun getPoints(userId: Int): List<PointStore>{
         return pointRepository.getAllPoints(userId)
     }
 

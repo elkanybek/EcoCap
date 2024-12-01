@@ -19,11 +19,11 @@ class HomeViewModel(private val questRepository: QuestRepository): ViewModel() {
 
     var quests: List<QuestStore> = mutableListOf()
 
-    init{
-        viewModelScope.launch {
-            questRepository.insertQuests(quests)
-        }
-    }
+//    init{
+//        viewModelScope.launch {
+//            questRepository.insertQuests(quests)
+//        }
+//    }
 
     suspend fun getQuest(): QuestStore {
         return questRepository.getRandomQuest()
