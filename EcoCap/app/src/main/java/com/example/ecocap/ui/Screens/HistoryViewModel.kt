@@ -8,25 +8,7 @@ import com.example.ecocap.Data.Repository.PointRepository
 class HistoryViewModel(val pointRepository: PointRepository): ViewModel() {
     var sessionId: Int = 1
 
-    val animals = listOf(
-        "Frog",
-        "Tiger",
-        "Elephant",
-        "Penguin",
-        "Panda",
-        "Koala",
-        "Giraffe",
-        "Lion",
-        "Zebra",
-        "Kangaroo",
-        "Polar Bear"
-    )
-
-    suspend fun getPoints(userId: Int): List<PointStore>{
+    suspend fun getPoints(userId: Int): List<PointStore> {
         return pointRepository.getAllPoints(userId)
-    }
-
-    suspend fun addQuest(pointStore: PointStore){
-        pointRepository.insertPoints(pointStore)
     }
 }

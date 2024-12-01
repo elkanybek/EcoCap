@@ -30,10 +30,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.ecocap.R
 import android.content.Context
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -43,6 +46,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.ecocap.Data.Database.PointStore
@@ -91,6 +95,7 @@ fun HistoryScreen(
             userScrollEnabled = true,
         ) {
             items(history.size) { index ->
+
                 Box(
                     modifier = Modifier
                         .width(375.dp)
@@ -107,18 +112,28 @@ fun HistoryScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
                         Column {
+                                Text(
+                                    text = "Quest: ${history[index].questName}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    fontFamily = FontFamily.Default,
+                                    modifier = Modifier
+                                        .align(Alignment.Start)
+                                        .padding(8.dp)
+                                )
+                                Text(
+                                    text = "Multiplier: x${history[index].streakMultiplier}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    fontFamily = FontFamily.Default,
+                                    modifier = Modifier
+                                        .align(Alignment.Start)
+                                        .padding(8.dp)
+                                )
                             Text(
-                                text = "${history[index]}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                fontFamily = FontFamily.Default,
-                                modifier = Modifier
-                                    .align(Alignment.Start)
-                                    .padding(8.dp)
-                            )
-                            Text(
-                                text = "+${history[index].scoreGained}",
+                                text = "Points: +${history[index].scoreGained}",
                                 fontSize = 20.sp,
                                 color = Color.Black,
                                 fontFamily = FontFamily.Default,
@@ -129,22 +144,36 @@ fun HistoryScreen(
 
                             )
                         }
+                        Row(modifier = Modifier.fillMaxHeight()) {
+                            val imageData = history[index].image
 
-                        Image(
-                            //to do: find out how to show history stored image
-                            painter = painterResource(id = R.drawable.flower),
-                            contentDescription = "Placeholder Image",
-                            modifier = Modifier
-                                .height(80.dp)
-                                .width(80.dp)
-                                .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-//                                .align(Alignment.End)
-                        )
+                            if (imageData != null && imageData.isNotEmpty()) {
+                                val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+                                Image(
+                                    bitmap = bitmap.asImageBitmap(),
+                                    contentDescription = "Stored Image",
+                                    modifier = Modifier
+                                        .height(120.dp)
+                                        .width(120.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .align(Alignment.CenterVertically)
+                                )
+                            } else {
+                                // Display placeholder if no image is available
+                                Image(
+                                    painter = painterResource(id = R.drawable.flower),
+                                    contentDescription = "Placeholder Image",
+                                    modifier = Modifier
+                                        .height(120.dp)
+                                        .width(120.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .align(Alignment.CenterVertically)
+                                )
+                            }
+                        }
                     }
                 }
             }
-
-
         }
     }
 }

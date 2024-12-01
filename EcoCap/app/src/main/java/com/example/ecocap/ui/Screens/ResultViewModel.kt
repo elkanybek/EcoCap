@@ -1,5 +1,7 @@
 package com.example.ecocap.ui.Screens
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +12,8 @@ import com.example.ecocap.Data.Repository.PointRepository
 import com.google.mlkit.vision.label.ImageLabel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 class ResultViewModel(private val pointRepository: PointRepository): ViewModel() {
     var sessionId: Int = 1
@@ -30,7 +34,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
         "Polar Bear"
     )
 
-    suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>): Boolean{
+    suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
         result = false
         for(quest in quests){
@@ -39,13 +43,14 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
 //                if(true){ // for testing
                     result = true
                     pointsGained = 200
+                    var imageBytes = uriToBytes(uri = image, context)
 
                     val pointStore: PointStore = PointStore(
                         userId = sessionId,
                         questName = quest.name,
-                        image = "empty",
+                        image = imageBytes,
                         streakMultiplier = 1.0,
-                        scoreGained = 200
+                        scoreGained = pointsGained
                     )
                     pointRepository.insertPoints(pointStore)
                     return true
@@ -53,5 +58,21 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
             }
         }
         return false
+    }
+
+    private fun uriToBytes(uri: Uri?, context: Context): ByteArray{
+        if (uri == null) {
+            return ByteArray(0)
+        }
+        val inputStream: InputStream = context.contentResolver.openInputStream(uri)!!
+        val byteArrayOutputStream = ByteArrayOutputStream()
+
+        val buffer = ByteArray(1024)
+        var length: Int
+        while (inputStream.read(buffer).also { length = it } != -1) {
+            byteArrayOutputStream.write(buffer, 0, length)
+        }
+
+        return byteArrayOutputStream.toByteArray()
     }
 }

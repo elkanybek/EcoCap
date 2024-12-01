@@ -202,7 +202,9 @@ fun Router(
                     LaunchedEffect(result) {
                         result = resultViewModel.checkResult(
                             homeViewModel.quests,
-                            captureImageViewModel.inputLabelList
+                            captureImageViewModel.inputLabelList,
+                            captureImageViewModel.selectedImageUri,
+                            context = context
                         )
                     }
 

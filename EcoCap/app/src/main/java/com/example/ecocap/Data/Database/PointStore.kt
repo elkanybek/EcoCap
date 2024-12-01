@@ -19,7 +19,7 @@ data class PointStore (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val userId: Int,
     val questName: String,
-    val image: String,
+    val image: ByteArray,
     val streakMultiplier: Double,
     val scoreGained: Int
 )
