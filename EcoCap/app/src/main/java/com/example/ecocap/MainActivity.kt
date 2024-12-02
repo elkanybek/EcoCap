@@ -62,6 +62,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ecocap.Data.Database.DatabaseProvider
 import com.example.ecocap.Data.Database.QuestStore
+import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
