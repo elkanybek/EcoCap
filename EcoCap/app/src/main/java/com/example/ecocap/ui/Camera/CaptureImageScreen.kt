@@ -36,6 +36,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import com.example.ecocap.ML_Kit.getImageLabels
 
 @Composable
@@ -75,6 +76,7 @@ fun CaptureImageScreen(
             Image(
                 painter = painterResource(id = R.drawable.baseline_image_24),
                 contentDescription = "Placeholder Image",
+
                 modifier = Modifier
                     .height(400.dp)
                     .fillMaxWidth()
@@ -100,7 +102,7 @@ fun CaptureImageScreen(
                 Text(
                     text = "Upload Image",
                     fontSize = 18.sp,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

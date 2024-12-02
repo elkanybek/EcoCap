@@ -72,7 +72,7 @@ fun ResultScreen(
             text = "Result",
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -81,7 +81,7 @@ fun ResultScreen(
             Text(
                 text = "Quest Completed",
                 fontSize = 30.sp,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
 
             if (image.isNotEmpty()) {
@@ -106,7 +106,7 @@ fun ResultScreen(
             Text(
                 text = "+200",
                 fontSize = 25.sp,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
         else{

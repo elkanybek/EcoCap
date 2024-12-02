@@ -22,17 +22,18 @@ import androidx.compose.ui.unit.sp
 import com.example.ecocap.R
 
 @Composable
-fun SettingsScreen() {
-    var username by remember { mutableStateOf("DavyDav") }
-    var password by remember { mutableStateOf("********") }
-    var isDarkTheme by remember { mutableStateOf(false) }
-
+fun SettingsScreen(
+    darkIsEnabled: Boolean,
+    onThemeToggle: (Boolean) -> Unit
+) {
     // Track changes to fields
-    var initialUsername by remember { mutableStateOf(username) }
-    var initialPassword by remember { mutableStateOf(password) }
-    var initialTheme by remember { mutableStateOf(isDarkTheme) }
+//    var initialTheme by remember { mutableStateOf(darkIsEnabled) }
+//
+//    val isChanged = darkIsEnabled != initialTheme
 
-    val isChanged = username != initialUsername || password != initialPassword || isDarkTheme != initialTheme
+    var tempDarkIsEnabled by remember { mutableStateOf(darkIsEnabled) }
+
+    val isChanged = tempDarkIsEnabled != darkIsEnabled
 
     Column(
         modifier = Modifier
@@ -50,7 +51,7 @@ fun SettingsScreen() {
             text = "Settings",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -77,11 +78,11 @@ fun SettingsScreen() {
                     text = "Dark / Light Theme",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = { isDarkTheme = it },
+                    checked = tempDarkIsEnabled,
+                    onCheckedChange = { tempDarkIsEnabled = it },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Black,
                         uncheckedThumbColor = Color.Gray
@@ -97,9 +98,8 @@ fun SettingsScreen() {
         Button(
             onClick = {
                 // Update initial values
-                initialUsername = username
-                initialPassword = password
-                initialTheme = isDarkTheme
+//                initialTheme = darkIsEnabled
+                onThemeToggle(tempDarkIsEnabled)
             },
             modifier = Modifier
                 .fillMaxWidth()

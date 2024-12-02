@@ -52,7 +52,7 @@ fun HomeScreen(
             text = "EcoCap",
             fontSize = 80.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(35.dp))
@@ -62,7 +62,7 @@ fun HomeScreen(
                 text = "DailyStreak: ${dailyStreak}",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Image(
                 painter = painterResource(id = R.drawable.fire),
@@ -78,7 +78,7 @@ fun HomeScreen(
             fontSize = 40.sp,
             textDecoration = TextDecoration.Underline,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
 
         )
 
@@ -116,7 +116,7 @@ fun HomeScreen(
                             text = quests[index].name,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black ,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer ,
                             fontFamily = FontFamily.Default,
                             modifier = Modifier
                                 .align(Alignment.Start)
@@ -125,7 +125,7 @@ fun HomeScreen(
                         Text(
                             text = "Capture ${quests[index].name} out in the wilderness, and upload it to EcoCap",
                             fontSize = 20.sp,
-                            color = Color.Black ,
+                            color =MaterialTheme.colorScheme.onPrimaryContainer ,
                             fontFamily = FontFamily.Default,
                             modifier = Modifier
                                 .align(Alignment.Start)

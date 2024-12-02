@@ -46,7 +46,7 @@ fun ProfileScreen() {
             text = "Profile",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -110,16 +110,19 @@ fun ProfileScreen() {
         // Logout Button
         Button(
             onClick = { /* TODO: Handle Logout */ },
+
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE0E0E0))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+            )
         ) {
             Text(
                 text = "Logout",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
@@ -152,7 +155,7 @@ fun EditableSettingsField(
             text = label,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         TextField(
             value = value,
