@@ -72,6 +72,7 @@ import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.ecocap.Data.Repository.UserRepository
+import com.example.ecocap.ui.Screens.SettingsViewModel
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }
 
@@ -113,14 +114,19 @@ class MainActivity : ComponentActivity() {
             val resultViewModel: ResultViewModel by viewModels{
                 ResultViewModelFactory(pointRepository)
             }
-            var isDarkTheme by remember { mutableStateOf(false) }
+
+            val settingsViewModel: SettingsViewModel by viewModels{
+                SettingsViewModelFactory()
+            }
+
+//            var isDarkTheme by remember { mutableStateOf(false) }
 
             val captureImageViewModel: CaptureImageViewModel by viewModels()
 
 
 
-            EcoCapTheme(darkTheme = isDarkTheme) {
-                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel)
+            EcoCapTheme(darkTheme = settingsViewModel.darkIsEnabled) {
+                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel)
             }
         }
     }
@@ -140,6 +146,7 @@ fun Router(
     homeViewModel: HomeViewModel,
     historyViewModel: HistoryViewModel,
     resultViewModel: ResultViewModel,
+    settingsViewModel: SettingsViewModel
 ) {
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
@@ -183,7 +190,12 @@ fun Router(
                     ProfileScreen()
                 }
                 composable("SettingsScreenRoute") {
-                    SettingsScreen()
+                    SettingsScreen(
+                        darkIsEnabled = settingsViewModel.darkIsEnabled,
+                        onThemeToggle = {
+                            settingsViewModel.toggleDarkMode()
+                        },
+                    )
                 }
 
 
@@ -244,172 +256,19 @@ class ResultViewModelFactory(private val pointRepository: PointRepository) : Vie
     }
 }
 
+class SettingsViewModelFactory() : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SettingsViewModel() as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
 
-//@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun Router(
-//    context: Context
-//) {
-//
-//    val thisContext = context;
-//    val navController = rememberNavController()
-//    var canNavigateBack by rememberSaveable() { mutableStateOf(false) }
-//    var inSettingsScreen by rememberSaveable() { mutableStateOf(false) }
-//
-//    Surface(
-//        color = Color(0xFFBA1A1A),
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        Scaffold(
-//            topBar = {
-//                TopAppBar(
-//                    modifier = Modifier.padding(0.dp),
-//                    colors = topAppBarColors(
-//                        containerColor = MaterialTheme.colorScheme.tertiary,
-//                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-//                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary       // Sets action icon color
-//                    ),
-//                    title = {
-////                        Row {
-////                            val image = painterResource(R.drawable.logo)
-////                            Image(
-////                                painter = image,
-////                                contentDescription = "EcoCap",
-////                                modifier = Modifier
-////                                    .size(40.dp)
-////                                    .padding(8.dp)
-////                            )
-//                            Text( "EcoCap")
-////                        }
-//                    },
-//                    actions = {
-//                        IconButton(
-//                            onClick = { navController.navigate("SettingsScreenRoute")},
-//                            enabled = !inSettingsScreen
-//                        ) {
-//                            Image(
-//                                painter = painterResource(R.drawable.logo),
-//                                contentDescription = "Settings",
-//                                modifier = Modifier.size(300.dp).padding(0.dp)
-//                            )
-//                        }
-//
-//                    },
-//
-//
-//                )
-//            },
-//            bottomBar = {
-//                BottomAppBar(
-//                    actions = {
-//                        Row (
-//                            horizontalArrangement = Arrangement.SpaceBetween,
-//                            modifier = Modifier.fillMaxWidth()
-//                        ){
-//                            //1
-//                            IconButton(
-//                                onClick = { navController.navigate("HomeScreenRoute")},
-////                                enabled = canNavigateBack,
-//                                modifier = Modifier
-//                                    .size(56.dp)
-//                                    .clip(CircleShape)
-//                            ) {
-//                                Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
-//                            }
-//
-//                            //2
-//                            IconButton(
-//                                onClick = { navController.navigate("HistoryScreenRoute")},
-////                                enabled = canNavigateBack,
-//                                modifier = Modifier
-//                                    .size(56.dp)
-//                                    .clip(CircleShape)
-//                            ) {
-//                                Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
-//                            }
-//
-//                            //3
-//                            IconButton(
-//                                onClick = { navController.navigate("CaptureScreenRoute")},
-////                                enabled = canNavigateBack,
-//                                modifier = Modifier
-//                                    .size(56.dp)
-//                                    .clip(CircleShape)
-//                            ) {
-//                                Icon(Icons.Filled.AddCircle, contentDescription = "Caputre", Modifier.size(40.dp))
-//                            }
-//
-//                            //4
-//                            IconButton(
-////                                onClick = { navController.popBackStack(); inSettingsScreen = false },
-//                                onClick = { },
-////                                enabled = canNavigateBack,
-//                                modifier = Modifier
-//                                    .size(56.dp)
-//                                    .clip(CircleShape)
-//                            ) {
-//                                Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
-//                            }
-//
-//                            //5
-//                            IconButton(
-////                                onClick = { navController.popBackStack(); inSettingsScreen = false },
-//                                onClick = { },
-////                                enabled = canNavigateBack,
-//                                modifier = Modifier
-//                                    .size(56.dp)
-//                                    .clip(CircleShape)
-//                            ) {
-//                                Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
-//                            }
-//                        }
-//                    },
-//                    containerColor = MaterialTheme.colorScheme.tertiary,
-//                )
-//            },
-//            content = {
-//                CompositionLocalProvider(LocalNavController provides navController) {
-//                    NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
-//
-//
-//                        composable("HomeScreenRoute")
-//                        {
-//                            HomeScreen()
-//                        }
-//
-//                        composable("HistoryScreenRoute")
-//                        {
-//                            HistoryScreen()
-////                            canNavigateBack = navController.previousBackStackEntry != null
-////                            SettingsScreen(
-////                                onThemeChange = onThemeChange,
-////                                isInSettings = { inSettingsScreen = it }
-////                            )
-//                        }
-//
-//                        composable("CaptureScreenRoute")
-//                        {
-//                            CaptureImageScreen(
-//                                context = thisContext
-//                            )
-//                        }
-//
-//                        composable("ScoreScreenRoute/{score}")
-//                        {
-//                            var score: String = it.arguments?.getString("score") ?: ""
-////                            ScoreScreen(
-////                                finalScore = score.toInt(),
-////                                highScore = highScore,
-////                                onHighScoreUpdate = { highScore = it }
-////                            )
-//                        }
-//                    }
-//                }
-//            }
-//        )
-//    }
-//}
+
+
+
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

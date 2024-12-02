@@ -46,7 +46,7 @@ fun ProfileScreen() {
             text = "Profile",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -119,7 +119,7 @@ fun ProfileScreen() {
                 text = "Logout",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
@@ -152,7 +152,7 @@ fun EditableSettingsField(
             text = label,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         TextField(
             value = value,

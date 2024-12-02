@@ -78,7 +78,7 @@ fun HistoryScreen(
             text = "History",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -114,7 +114,7 @@ fun HistoryScreen(
                                     text = "Quest: ${history[index].questName}",
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     fontFamily = FontFamily.Default,
                                     modifier = Modifier
                                         .align(Alignment.Start)
@@ -124,7 +124,7 @@ fun HistoryScreen(
                                     text = "Multiplier: x${history[index].streakMultiplier}",
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     fontFamily = FontFamily.Default,
                                     modifier = Modifier
                                         .align(Alignment.Start)
@@ -133,7 +133,7 @@ fun HistoryScreen(
                             Text(
                                 text = "Points: +${history[index].scoreGained}",
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontFamily = FontFamily.Default,
                                 modifier = Modifier
                                     .align(Alignment.Start)

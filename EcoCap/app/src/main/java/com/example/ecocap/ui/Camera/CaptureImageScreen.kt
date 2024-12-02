@@ -75,6 +75,7 @@ fun CaptureImageScreen(
             Image(
                 painter = painterResource(id = R.drawable.baseline_image_24),
                 contentDescription = "Placeholder Image",
+
                 modifier = Modifier
                     .height(400.dp)
                     .fillMaxWidth()

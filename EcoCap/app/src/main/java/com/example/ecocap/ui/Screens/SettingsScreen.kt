@@ -22,7 +22,10 @@ import androidx.compose.ui.unit.sp
 import com.example.ecocap.R
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    darkIsEnabled: Boolean,
+    onThemeToggle: () -> Unit
+) {
     var username by remember { mutableStateOf("DavyDav") }
     var password by remember { mutableStateOf("********") }
     var isDarkTheme by remember { mutableStateOf(false) }
@@ -50,7 +53,7 @@ fun SettingsScreen() {
             text = "Settings",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -77,11 +80,11 @@ fun SettingsScreen() {
                     text = "Dark / Light Theme",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = { isDarkTheme = it },
+                    checked = darkIsEnabled,
+                    onCheckedChange = { onThemeToggle() },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Black,
                         uncheckedThumbColor = Color.Gray
