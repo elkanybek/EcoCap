@@ -193,7 +193,7 @@ fun Router(
                     SettingsScreen(
                         darkIsEnabled = settingsViewModel.darkIsEnabled,
                         onThemeToggle = {
-                            settingsViewModel.toggleDarkMode()
+                            settingsViewModel.toggleDarkMode(it)
                         },
                     )
                 }

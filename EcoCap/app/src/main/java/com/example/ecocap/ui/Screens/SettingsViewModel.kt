@@ -16,8 +16,9 @@ class SettingsViewModel(): ViewModel() {
 
 
 
-    fun toggleDarkMode(){
-        darkIsEnabled = !darkIsEnabled
+    fun toggleDarkMode(Boolean: Boolean){
+//        darkIsEnabled = !darkIsEnabled
+        darkIsEnabled = Boolean
     }
 
 

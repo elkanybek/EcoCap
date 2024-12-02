@@ -24,18 +24,16 @@ import com.example.ecocap.R
 @Composable
 fun SettingsScreen(
     darkIsEnabled: Boolean,
-    onThemeToggle: () -> Unit
+    onThemeToggle: (Boolean) -> Unit
 ) {
-    var username by remember { mutableStateOf("DavyDav") }
-    var password by remember { mutableStateOf("********") }
-    var isDarkTheme by remember { mutableStateOf(false) }
-
     // Track changes to fields
-    var initialUsername by remember { mutableStateOf(username) }
-    var initialPassword by remember { mutableStateOf(password) }
-    var initialTheme by remember { mutableStateOf(isDarkTheme) }
+//    var initialTheme by remember { mutableStateOf(darkIsEnabled) }
+//
+//    val isChanged = darkIsEnabled != initialTheme
 
-    val isChanged = username != initialUsername || password != initialPassword || isDarkTheme != initialTheme
+    var tempDarkIsEnabled by remember { mutableStateOf(darkIsEnabled) }
+
+    val isChanged = tempDarkIsEnabled != darkIsEnabled
 
     Column(
         modifier = Modifier
@@ -83,8 +81,8 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Switch(
-                    checked = darkIsEnabled,
-                    onCheckedChange = { onThemeToggle() },
+                    checked = tempDarkIsEnabled,
+                    onCheckedChange = { tempDarkIsEnabled = it },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Black,
                         uncheckedThumbColor = Color.Gray
@@ -100,9 +98,8 @@ fun SettingsScreen(
         Button(
             onClick = {
                 // Update initial values
-                initialUsername = username
-                initialPassword = password
-                initialTheme = isDarkTheme
+//                initialTheme = darkIsEnabled
+                onThemeToggle(tempDarkIsEnabled)
             },
             modifier = Modifier
                 .fillMaxWidth()

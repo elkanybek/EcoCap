@@ -110,10 +110,13 @@ fun ProfileScreen() {
         // Logout Button
         Button(
             onClick = { /* TODO: Handle Logout */ },
+
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE0E0E0))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+            )
         ) {
             Text(
                 text = "Logout",
