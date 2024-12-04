@@ -10,11 +10,15 @@ class UserRepository(private val userDao: UserDao) {
         userDao.insert(user)
     }
 
-    suspend fun getUserPoints(userId: Int){
-        userDao.getPointsFromId(userId)
+    suspend fun getUserPoints(userId: Int): Int{
+        return userDao.getPointsFromId(userId)
     }
 
-    suspend fun getUserId(name: String, password: String){
+    suspend fun updateTotalPoints(userId: Int, newPoints: Int) {
+        userDao.updateTotalPoints(userId, newPoints)
+    }
+
+    suspend fun getUserId(name: String, password: String) {
         userDao.getUserId(name, password)
     }
 

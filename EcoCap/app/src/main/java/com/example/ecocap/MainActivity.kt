@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
                 HistoryViewModelFactory(pointRepository)
             }
             val resultViewModel: ResultViewModel by viewModels{
-                ResultViewModelFactory(pointRepository)
+                ResultViewModelFactory(pointRepository, userRepository)
             }
 
             val settingsViewModel: SettingsViewModel by viewModels{
@@ -160,7 +160,7 @@ fun Router(
         quests = homeViewModel.getQuests()
     }
 
-    TopBottomBar(navController) {
+    TopBottomBar(navController, resultViewModel.totalPoints) {
         CompositionLocalProvider(LocalNavController provides navController) {
             NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
@@ -248,11 +248,11 @@ class HistoryViewModelFactory(private val pointRepository: PointRepository) : Vi
     }
 }
 
-class ResultViewModelFactory(private val pointRepository: PointRepository) : ViewModelProvider.Factory {
+class ResultViewModelFactory(private val pointRepository: PointRepository, private val userRepository: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ResultViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ResultViewModel(pointRepository) as T
+            return ResultViewModel(pointRepository, userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -279,10 +279,11 @@ class SettingsViewModelFactory() : ViewModelProvider.Factory {
 fun TopBottomBar(
     navController: NavController,
     //inSettingsScreen: Boolean,
+    score: Int,
     content: @Composable () -> Unit
 ) {
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController, score) },
         bottomBar = { BottomBar(navController) },
         content = { content() }
     )
@@ -290,7 +291,7 @@ fun TopBottomBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController) {
+fun TopBar(navController: NavController, score: Int) {
     TopAppBar(
         modifier = Modifier.padding(0.dp),
         colors = topAppBarColors(
@@ -298,7 +299,7 @@ fun TopBar(navController: NavController) {
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        title = { Text("EcoCap") },
+        title = { Text("EcoCap ${score}") },
         actions = {
             IconButton(
                 onClick = { navController.navigate("SettingsScreenRoute") },

@@ -18,6 +18,9 @@ interface UserDao {
     @Query("SELECT totalPoints FROM users WHERE id = :userId ")
     suspend fun getPointsFromId(userId:Int): Int
 
+    @Query("UPDATE users SET totalPoints = :newPoints WHERE id = :userId")
+    suspend fun updateTotalPoints(userId:Int, newPoints: Int)
+
     @Update
     suspend fun update(user: UserStore)
 }

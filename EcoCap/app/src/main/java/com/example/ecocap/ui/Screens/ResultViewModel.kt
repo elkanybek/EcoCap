@@ -8,18 +8,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.Data.Database.QuestStore
+import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
+import com.example.ecocap.Data.Repository.UserRepository
 import com.google.mlkit.vision.label.ImageLabel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
-class ResultViewModel(private val pointRepository: PointRepository): ViewModel() {
+class ResultViewModel(private val pointRepository: PointRepository, private val userRepository: UserRepository): ViewModel() {
     var sessionId: Int = 1
     var result by mutableStateOf(false)
     var pointsGained by mutableStateOf(0)
     var imageBytes by mutableStateOf<ByteArray>(ByteArray(0))
+    var totalPoints by mutableStateOf(0)
 
     val animals = listOf(
         "Frog",
@@ -34,6 +37,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
         "Kangaroo",
         "Polar Bear"
     )
+
 
     suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
@@ -53,6 +57,11 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
                         streakMultiplier = 1.0,
                         scoreGained = pointsGained
                     )
+
+                    val points: Int = userRepository.getUserPoints(sessionId)
+                    totalPoints = points + pointsGained
+                    userRepository.updateTotalPoints(sessionId, points + totalPoints)
+
                     pointRepository.insertPoints(pointStore)
                     return true
                 }
