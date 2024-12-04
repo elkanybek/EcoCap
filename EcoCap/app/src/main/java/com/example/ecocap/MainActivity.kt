@@ -98,6 +98,7 @@ class MainActivity : ComponentActivity() {
 //            val user: UserStore = UserStore(
 //                id = 1,
 //                name = "Bob",
+//                password = "password",
 //                totalPoints = 0
 //            )
 //            LaunchedEffect(Unit) {
