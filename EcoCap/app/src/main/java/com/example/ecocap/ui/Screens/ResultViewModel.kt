@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.Data.Database.QuestStore
 import com.example.ecocap.Data.Database.UserStore
@@ -14,6 +15,7 @@ import com.example.ecocap.Data.Repository.UserRepository
 import com.google.mlkit.vision.label.ImageLabel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
@@ -23,6 +25,12 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
     var pointsGained by mutableStateOf(0)
     var imageBytes by mutableStateOf<ByteArray>(ByteArray(0))
     var totalPoints by mutableStateOf(0)
+
+    init {
+        viewModelScope.launch{
+            totalPoints = userRepository.getUserPoints(sessionId)
+        }
+    }
 
     val animals = listOf(
         "Frog",
