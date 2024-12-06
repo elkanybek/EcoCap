@@ -12,6 +12,8 @@ import com.example.ecocap.Data.Database.QuestStore
 import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.UserRepository
+import com.example.ecocap.ui.Camera.CaptureImageViewModel
+import com.example.ecocap.Data.Repository.UserRepository
 import com.google.mlkit.vision.label.ImageLabel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,37 +34,26 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
         }
     }
 
-    val animals = listOf(
-        "Frog",
-        "Tiger",
-        "Elephant",
-        "Penguin",
-        "Panda",
-        "Koala",
-        "Giraffe",
-        "Lion",
-        "Zebra",
-        "Kangaroo",
-        "Polar Bear"
-    )
-
-
     suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
         result = false
-        for(quest in quests){
-            for(label in labels){
-                if(quest.name == label.text && label.confidence > 0.2){
-//                if(true){ // for testing
+        homeViewModel.checkStreak()
+        var isMatchFound = false
+        for (quest in quests) {
+            for (label in labels) {
+                if (quest.name == label.text && label.confidence > 0.2) {
                     result = true
-                    pointsGained = 200
+                    isMatchFound = true
+                    val streakMultiplier = homeViewModel.dailyStreak.toDouble()
+                    pointsGained = (200 * streakMultiplier).toInt()
+
                     imageBytes = uriToBytes(uri = image, context)
 
-                    val pointStore: PointStore = PointStore(
+                    val pointStore = PointStore(
                         userId = sessionId,
                         questName = quest.name,
                         image = imageBytes,
-                        streakMultiplier = 1.0,
+                        streakMultiplier = streakMultiplier,
                         scoreGained = pointsGained
                     )
 
@@ -71,11 +62,12 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
                     userRepository.updateTotalPoints(sessionId, points + totalPoints)
 
                     pointRepository.insertPoints(pointStore)
-                    return true
+                    break
                 }
             }
+            if (isMatchFound) break
         }
-        return false
+        return isMatchFound
     }
 
     private fun uriToBytes(uri: Uri?, context: Context): ByteArray{

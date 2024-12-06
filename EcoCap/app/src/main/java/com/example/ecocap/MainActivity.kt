@@ -57,13 +57,17 @@ import com.example.ecocap.ui.Screens.ProfileScreen
 import com.example.ecocap.ui.Screens.SettingsScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 import androidx.activity.viewModels
+import androidx.compose.material3.DatePicker
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ecocap.Data.Database.DatabaseProvider
+import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.Data.Database.QuestStore
+import com.example.ecocap.Data.Database.StreakScore
 import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
+import com.example.ecocap.Data.Repository.StreakRepository
 import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
 import com.example.ecocap.ui.Screens.HistoryViewModel
@@ -74,6 +78,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.ecocap.Data.Repository.UserRepository
 import com.example.ecocap.ui.Screens.SettingsViewModel
+import java.util.Date
+
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }
 
@@ -89,6 +95,7 @@ class MainActivity : ComponentActivity() {
             val questRepository = QuestRepository(db.questDao())
             val pointRepository = PointRepository(db.pointDao())
             val userRepository = UserRepository(db.userDao())
+            val streakRepository = StreakRepository(db.streakDao())
 
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
@@ -106,15 +113,25 @@ class MainActivity : ComponentActivity() {
 //                    userRepository.insertUser(user)
 //                }
 //            }
+//            val streak: StreakScore = StreakScore(
+//                userId = 1,
+//                dailyStreak = 0,
+//                lastSessionDate = (Date().time - (24*60*60*1000))
+//            )
+//            LaunchedEffect(Unit) {
+//                launch(Dispatchers.IO) {
+//                    streakRepository.insertStreak(streak)
+//                }
+//            }
 
             val homeViewModel: HomeViewModel by viewModels{
-                HomeViewModelFactory(questRepository)
+                HomeViewModelFactory(questRepository, streakRepository)
             }
             val historyViewModel: HistoryViewModel by viewModels{
                 HistoryViewModelFactory(pointRepository)
             }
             val resultViewModel: ResultViewModel by viewModels{
-                ResultViewModelFactory(pointRepository, userRepository)
+                ResultViewModelFactory(pointRepository, userRepository, homeViewModel)
             }
 
             val settingsViewModel: SettingsViewModel by viewModels{
@@ -153,7 +170,6 @@ fun Router(
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
     var inSettingsScreen by rememberSaveable { mutableStateOf(false) }
-
     var quests by remember { mutableStateOf<List<QuestStore>>(emptyList()) }
 
     LaunchedEffect(Unit) {
@@ -166,7 +182,7 @@ fun Router(
 
                 //NavBar
                 composable("HomeScreenRoute") {
-                    HomeScreen(animals = homeViewModel.animals,
+                    HomeScreen(
                         dailyStreak = homeViewModel.dailyStreak,
                         quests
                     )
@@ -228,11 +244,11 @@ fun Router(
 
 }
 
-class HomeViewModelFactory(private val questRepository: QuestRepository) : ViewModelProvider.Factory {
+class HomeViewModelFactory(private val questRepository: QuestRepository, private val streakRepository: StreakRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HomeViewModel(questRepository) as T
+            return HomeViewModel(streakRepository, questRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -248,11 +264,11 @@ class HistoryViewModelFactory(private val pointRepository: PointRepository) : Vi
     }
 }
 
-class ResultViewModelFactory(private val pointRepository: PointRepository, private val userRepository: UserRepository) : ViewModelProvider.Factory {
+class ResultViewModelFactory(private val pointRepository: PointRepository, private val userRepository: UserRepository, private val homeViewModel: HomeViewModel) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ResultViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ResultViewModel(pointRepository, userRepository) as T
+            return ResultViewModel(pointRepository, userRepository, homeViewModel) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
