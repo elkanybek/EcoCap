@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.StreakRepository
 import kotlinx.coroutines.launch
+import java.util.Date
 
 //class HomeViewModel(private val questRepository: QuestRepository): ViewModel() {
 //    val questsAmount = 3
@@ -113,12 +114,14 @@ class HomeViewModel(
 
     private fun saveStreakData() {
         viewModelScope.launch {
-            streakRepository.updateStreak(userId, dailyStreak, System.currentTimeMillis())
+            streakRepository.updateStreak(userId, dailyStreak, Date().time)
         }
     }
 
     fun checkStreak() {
-        val today = System.currentTimeMillis()
+//        val today = System.currentTimeMillis()
+
+        val today = Date().time
 
         // Timestamps to calendar days
         val lastSessionDay = lastSessionDate / (24 * 60 * 60 * 1000)
@@ -126,7 +129,7 @@ class HomeViewModel(
 
         if (currentDay == lastSessionDay) {
             return
-        } else if ((currentDay - lastSessionDay).toInt() == 1) {
+        } else if ((currentDay - lastSessionDay).toInt() <= 1) {
             dailyStreak++
         } else {
             dailyStreak = 1
@@ -145,26 +148,7 @@ class HomeViewModel(
             quests = listOf(
                 questRepository.getRandomQuest(),
                 questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
-                questRepository.getRandomQuest(),
+                questRepository.getRandomQuest()
             )
         }
         return quests

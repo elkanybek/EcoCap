@@ -57,12 +57,14 @@ import com.example.ecocap.ui.Screens.ProfileScreen
 import com.example.ecocap.ui.Screens.SettingsScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 import androidx.activity.viewModels
+import androidx.compose.material3.DatePicker
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ecocap.Data.Database.DatabaseProvider
 import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.Data.Database.QuestStore
+import com.example.ecocap.Data.Database.StreakScore
 import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.StreakRepository
@@ -76,6 +78,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.ecocap.Data.Repository.UserRepository
 import com.example.ecocap.ui.Screens.SettingsViewModel
+import java.util.Date
+
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }
 
@@ -106,6 +110,16 @@ class MainActivity : ComponentActivity() {
 //            LaunchedEffect(Unit) {
 //                launch(Dispatchers.IO) {
 //                    userRepository.insertUser(user)
+//                }
+//            }
+//            val streak: StreakScore = StreakScore(
+//                userId = 1,
+//                dailyStreak = 0,
+//                lastSessionDate = (Date().time - (24*60*60*1000))
+//            )
+//            LaunchedEffect(Unit) {
+//                launch(Dispatchers.IO) {
+//                    streakRepository.insertStreak(streak)
 //                }
 //            }
 
