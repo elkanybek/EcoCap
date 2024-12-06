@@ -61,9 +61,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ecocap.Data.Database.DatabaseProvider
+import com.example.ecocap.Data.Database.PointStore
 import com.example.ecocap.Data.Database.QuestStore
 import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
+import com.example.ecocap.Data.Repository.StreakRepository
 import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
 import com.example.ecocap.ui.Screens.HistoryViewModel
@@ -89,6 +91,7 @@ class MainActivity : ComponentActivity() {
             val questRepository = QuestRepository(db.questDao())
             val pointRepository = PointRepository(db.pointDao())
             val userRepository = UserRepository(db.userDao())
+            val streakRepository = StreakRepository(db.streakDao())
 
             LaunchedEffect(Unit) {
                 launch(Dispatchers.IO) {
@@ -107,13 +110,13 @@ class MainActivity : ComponentActivity() {
 //            }
 
             val homeViewModel: HomeViewModel by viewModels{
-                HomeViewModelFactory(questRepository)
+                HomeViewModelFactory(questRepository, streakRepository)
             }
             val historyViewModel: HistoryViewModel by viewModels{
                 HistoryViewModelFactory(pointRepository)
             }
             val resultViewModel: ResultViewModel by viewModels{
-                ResultViewModelFactory(pointRepository)
+                ResultViewModelFactory(pointRepository, homeViewModel)
             }
 
             val settingsViewModel: SettingsViewModel by viewModels{
@@ -152,7 +155,6 @@ fun Router(
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
     var inSettingsScreen by rememberSaveable { mutableStateOf(false) }
-
     var quests by remember { mutableStateOf<List<QuestStore>>(emptyList()) }
 
     LaunchedEffect(Unit) {
@@ -165,7 +167,7 @@ fun Router(
 
                 //NavBar
                 composable("HomeScreenRoute") {
-                    HomeScreen(animals = homeViewModel.animals,
+                    HomeScreen(
                         dailyStreak = homeViewModel.dailyStreak,
                         quests
                     )
@@ -227,11 +229,11 @@ fun Router(
 
 }
 
-class HomeViewModelFactory(private val questRepository: QuestRepository) : ViewModelProvider.Factory {
+class HomeViewModelFactory(private val questRepository: QuestRepository, private val streakRepository: StreakRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HomeViewModel(questRepository) as T
+            return HomeViewModel(streakRepository, questRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -247,11 +249,11 @@ class HistoryViewModelFactory(private val pointRepository: PointRepository) : Vi
     }
 }
 
-class ResultViewModelFactory(private val pointRepository: PointRepository) : ViewModelProvider.Factory {
+class ResultViewModelFactory(private val pointRepository: PointRepository, private val homeViewModel: HomeViewModel) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ResultViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ResultViewModel(pointRepository) as T
+            return ResultViewModel(pointRepository, homeViewModel) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -278,10 +280,10 @@ class SettingsViewModelFactory() : ViewModelProvider.Factory {
 fun TopBottomBar(
     navController: NavController,
     //inSettingsScreen: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController)},
         bottomBar = { BottomBar(navController) },
         content = { content() }
     )

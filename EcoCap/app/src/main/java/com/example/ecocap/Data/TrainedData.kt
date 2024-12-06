@@ -4,7 +4,7 @@ import com.example.ecocap.Data.Database.QuestStore
 
 
 //Asked ChatGPT to generate this based off of table
-val quests = listOf(
+var quests = listOf(
     QuestStore(0, "Team"),
     QuestStore(1, "Bonfire"),
     QuestStore(2, "Comics"),

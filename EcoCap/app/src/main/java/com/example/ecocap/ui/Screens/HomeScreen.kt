@@ -36,7 +36,6 @@ import com.example.ecocap.Data.Database.QuestStore
 
 @Composable
 fun HomeScreen(
-    animals: List<String>,
     dailyStreak: Int,
     quests:  List<QuestStore>
 ) {

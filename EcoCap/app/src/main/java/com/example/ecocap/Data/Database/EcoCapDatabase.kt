@@ -6,14 +6,16 @@ import androidx.room.RoomDatabase
 import android.content.Context
 import com.example.ecocap.Data.Dao.PointDao
 import com.example.ecocap.Data.Dao.QuestDao
+import com.example.ecocap.Data.Dao.StreakDao
 import com.example.ecocap.Data.Dao.UserDao
 
 object DatabaseProvider {
-    @Database(entities = [UserStore::class, PointStore::class, QuestStore::class], version = 3)
+    @Database(entities = [UserStore::class, PointStore::class, QuestStore::class, StreakScore::class], version = 4)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun userDao(): UserDao
         abstract fun pointDao(): PointDao
         abstract fun questDao(): QuestDao
+        abstract fun streakDao(): StreakDao
 
         companion object {
             @Volatile
