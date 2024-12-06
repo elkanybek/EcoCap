@@ -1,4 +1,4 @@
-package com.example.ecocap.ui.Screens
+package com.example.ecocap.ui.Screens.Profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.sp
 import com.example.ecocap.R
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    onLogout: () -> Unit
+) {
     var username by remember { mutableStateOf("DavyDav") }
     var password by remember { mutableStateOf("********") }
     var confirmPassword by remember { mutableStateOf("********") }
@@ -52,7 +54,7 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         // Username Field
-        EditableSettingsField(
+        com.example.ecocap.ui.Screens.Profile.EditableSettingsField(
             label = "Username",
             value = username,
             onValueChange = { username = it }
@@ -61,7 +63,7 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Password Field
-        EditableSettingsField(
+        com.example.ecocap.ui.Screens.Profile.EditableSettingsField(
             label = "Password",
             value = password,
             onValueChange = { password = it },
@@ -71,7 +73,7 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Confirm Password Field
-        EditableSettingsField(
+        com.example.ecocap.ui.Screens.Profile.EditableSettingsField(
             label = "Confirm Password",
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
@@ -109,7 +111,7 @@ fun ProfileScreen() {
 
         // Logout Button
         Button(
-            onClick = { /* TODO: Handle Logout */ },
+            onClick = { onLogout() },
 
             modifier = Modifier
                 .fillMaxWidth()

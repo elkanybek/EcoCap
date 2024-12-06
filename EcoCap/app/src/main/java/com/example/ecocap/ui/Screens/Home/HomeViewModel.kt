@@ -1,17 +1,11 @@
-package com.example.ecocap.ui.Screens
+package com.example.ecocap.ui.Screens.Home
 
 import QuestRepository
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.ecocap.Data.Database.DatabaseProvider
 import com.example.ecocap.Data.Database.QuestStore
-import com.example.ecocap.Data.quests
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class HomeViewModel(private val questRepository: QuestRepository): ViewModel() {
     val questsAmount = 3

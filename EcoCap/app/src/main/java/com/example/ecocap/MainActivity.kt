@@ -51,9 +51,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.ecocap.ui.Camera.CaptureImageScreen
-import com.example.ecocap.ui.Screens.HistoryScreen
-import com.example.ecocap.ui.Screens.HomeScreen
-import com.example.ecocap.ui.Screens.ProfileScreen
+import com.example.ecocap.ui.Screens.History.HistoryScreen
+import com.example.ecocap.ui.Screens.Home.HomeScreen
 import com.example.ecocap.ui.Screens.SettingsScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 import androidx.activity.viewModels
@@ -62,17 +61,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ecocap.Data.Database.DatabaseProvider
 import com.example.ecocap.Data.Database.QuestStore
-import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
-import com.example.ecocap.ui.Screens.HistoryViewModel
-import com.example.ecocap.ui.Screens.HomeViewModel
+import com.example.ecocap.ui.Screens.History.HistoryViewModel
+import com.example.ecocap.ui.Screens.Home.HomeViewModel
 import com.example.ecocap.ui.Screens.ResultScreen
 import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.ecocap.Data.Repository.UserRepository
+import com.example.ecocap.ui.Screens.Login.LoginScreen
+import com.example.ecocap.ui.Screens.Login.RegisterScreen
+import com.example.ecocap.ui.Screens.Profile.ProfileScreen
 import com.example.ecocap.ui.Screens.SettingsViewModel
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }
@@ -162,7 +163,7 @@ fun Router(
 
     TopBottomBar(navController) {
         CompositionLocalProvider(LocalNavController provides navController) {
-            NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
+            NavHost(navController = navController, startDestination = "LoginScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
                 //NavBar
                 composable("HomeScreenRoute") {
@@ -189,7 +190,12 @@ fun Router(
                     )
                 }
                 composable("ProfileScreenRoute") {
-                    ProfileScreen()
+                    ProfileScreen(
+                        onLogout = {
+                            navController.navigate("LoginScreenRoute")
+                        }
+                    )
+
                 }
                 composable("SettingsScreenRoute") {
                     SettingsScreen(
@@ -219,6 +225,23 @@ fun Router(
                     ResultScreen(
                         image = resultViewModel.imageBytes,
                         result = resultViewModel.result
+                    )
+                }
+
+
+                composable("LoginScreenRoute") {
+                    LoginScreen(
+                        onLogin = {
+                            navController.navigate("HomeScreenRoute")
+                        },
+                        onRegister = { navController.navigate("RegisterScreenRoute") }
+                    )
+                }
+
+                composable ("RegisterScreenRoute") {
+                    RegisterScreen(
+                        onRegister = { navController.navigate("HomeScreenRoute") },
+                        onLogin = { navController.navigate("LoginScreenRoute") }
                     )
                 }
             }
@@ -351,13 +374,17 @@ fun BottomBar(navController: NavController) {
                 }
                 IconButton(
                     onClick = { navController.navigate("ProfileScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
                 }
                 IconButton(
                     onClick = { navController.navigate("SettingsScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
                 }

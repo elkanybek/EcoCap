@@ -35,6 +35,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
         "Polar Bear"
     )
 
+
     suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
         result = false
