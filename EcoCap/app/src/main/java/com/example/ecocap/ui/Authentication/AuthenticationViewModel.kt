@@ -8,21 +8,27 @@ import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.UserRepository
 
 class AuthenticationViewModel(val userRepository: UserRepository): ViewModel() {
-    var sessionUserId by mutableStateOf<Int?>(null)
+    var userId by mutableStateOf<Int?>(null)
 
-    suspend fun register(username: String, password: String){
+    suspend fun register(username: String, password: String): Int?{
         //register user to database
+        val userStore: UserStore = UserStore(
+            name = username,
+            password = password,
+            totalPoints = 0)
 
-        //set sessionId
-        val userStore: UserStore = UserStore(name = username, totalPoints = 0)
         userRepository.insertUser(userStore)
-        //return sessionId
+
+        userId = userRepository.getUserId(name = username, password = password)
+
+        return userId
     }
+    //iloveelsana
 
-    fun login(username: String, password: String){
-        //login user
 
-        //set sessionId
-        //return sessionId
+    suspend fun login(username: String, password: String): Int?{
+        userId = userRepository.getUserId(name = username, password = password)
+
+        return userId
     }
 }

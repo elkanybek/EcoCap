@@ -14,8 +14,8 @@ class UserRepository(private val userDao: UserDao) {
         userDao.getPointsFromId(userId)
     }
 
-    suspend fun getUserId(name: String, password: String){
-        userDao.getUserId(name, password)
+    suspend fun getUserId(name: String, password: String): Int{
+        return userDao.getUserId(name, password)
     }
 
     suspend fun updateUser(user: UserStore){
