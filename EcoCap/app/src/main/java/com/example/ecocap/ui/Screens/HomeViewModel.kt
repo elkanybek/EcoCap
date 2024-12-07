@@ -25,68 +25,6 @@ import com.example.ecocap.Data.Repository.StreakRepository
 import kotlinx.coroutines.launch
 import java.util.Date
 
-//class HomeViewModel(private val questRepository: QuestRepository): ViewModel() {
-//    val questsAmount = 3
-//    var sessionId: Int = 1
-//    var dailyStreak by mutableStateOf(0)
-//    var quests: List<QuestStore> = mutableListOf()
-//
-////    init{
-////        viewModelScope.launch {
-////            questRepository.insertQuests(quests)
-////        }
-////    }
-//
-//    suspend fun getQuest(): QuestStore {
-//        return questRepository.getRandomQuest()
-//    }
-//
-//    suspend fun getQuests(): List<QuestStore>{
-//        if(quests.isEmpty()){
-//            quests = listOf(
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//                questRepository.getRandomQuest(),
-//            )
-//        }
-//        return quests
-//    }
-//
-//    val animals = listOf(
-//        "Frog",
-//        "Tiger",
-//        "Elephant",
-//        "Penguin",
-//        "Panda",
-//        "Koala",
-//        "Giraffe",
-//        "Lion",
-//        "Zebra",
-//        "Kangaroo",
-//        "Polar Bear"
-//    )
-//
-//}
-
 class HomeViewModel(
     private val streakRepository: StreakRepository,
     //private val userId: Int = 1,
@@ -95,7 +33,7 @@ class HomeViewModel(
     val userId: Int = 1
     var dailyStreak by mutableStateOf(0)
     private var lastSessionDate: Long = 0
-    var quests: List<QuestStore> = mutableListOf()
+    var quests: MutableList<QuestStore> = mutableListOf()
 
     init {
         // Load the last streak and session date from the database
@@ -149,7 +87,7 @@ class HomeViewModel(
                 questRepository.getRandomQuest(),
                 questRepository.getRandomQuest(),
                 questRepository.getRandomQuest()
-            )
+            ).toMutableList()
         }
         return quests
     }

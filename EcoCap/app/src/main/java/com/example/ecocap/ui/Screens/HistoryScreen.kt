@@ -86,7 +86,7 @@ fun HistoryScreen(
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(0.9f)
                 .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

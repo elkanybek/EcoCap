@@ -234,7 +234,8 @@ fun Router(
 
                     ResultScreen(
                         image = resultViewModel.imageBytes,
-                        result = resultViewModel.result
+                        result = resultViewModel.result,
+                        pointsGained = resultViewModel.pointsGained
                     )
                 }
             }

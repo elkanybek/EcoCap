@@ -55,6 +55,7 @@ import com.example.ecocap.ML_Kit.getImageLabels
 fun ResultScreen(
     image: ByteArray,
     result: Boolean,
+    pointsGained: Int
 ) {
 
 
@@ -104,7 +105,7 @@ fun ResultScreen(
                 )
             }
             Text(
-                text = "+200",
+                text = "+${pointsGained}",
                 fontSize = 25.sp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )

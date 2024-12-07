@@ -13,7 +13,6 @@ import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.UserRepository
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
-import com.example.ecocap.Data.Repository.UserRepository
 import com.google.mlkit.vision.label.ImageLabel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,7 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
-class ResultViewModel(private val pointRepository: PointRepository, private val userRepository: UserRepository): ViewModel() {
+class ResultViewModel(private val pointRepository: PointRepository, private val userRepository: UserRepository, private val homeViewModel: HomeViewModel): ViewModel() {
     var sessionId: Int = 1
     var result by mutableStateOf(false)
     var pointsGained by mutableStateOf(0)
@@ -34,10 +33,11 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
         }
     }
 
-    suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
+    suspend fun checkResult(quests: MutableList<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
         result = false
         homeViewModel.checkStreak()
+        val questsToRemove = mutableListOf<QuestStore>()
         var isMatchFound = false
         for (quest in quests) {
             for (label in labels) {
@@ -56,12 +56,16 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
                         streakMultiplier = streakMultiplier,
                         scoreGained = pointsGained
                     )
-
-                    val points: Int = userRepository.getUserPoints(sessionId)
-                    totalPoints = points + pointsGained
-                    userRepository.updateTotalPoints(sessionId, points + totalPoints)
-
                     pointRepository.insertPoints(pointStore)
+
+                    val points: List<PointStore> = pointRepository.getAllPoints(sessionId)
+                    totalPoints = 0
+                    for(point in points){
+                        totalPoints += point.scoreGained
+                    }
+                    userRepository.updateTotalPoints(sessionId, totalPoints)
+
+                    quests.remove(quest)
                     break
                 }
             }
