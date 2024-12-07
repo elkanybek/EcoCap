@@ -18,14 +18,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.foundation.text.ClickableText
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    onLogin: () -> Unit,
+    onLogin: suspend (username: String, password: String) -> Unit,
     onRegister: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -66,7 +68,15 @@ fun LoginScreen(
 
         // Login Button
         Button(
-            onClick = { onLogin() },
+            onClick = {
+                coroutineScope.launch {
+                    try {
+                        onLogin(username, password) // Call the suspend function
+                    } catch (e: Exception) {
+                        // Handle exceptions (e.g., show an error message)
+                        println("Login failed: ${e.message}")
+                    }
+                } },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),

@@ -71,6 +71,7 @@ import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.ecocap.Data.Repository.UserRepository
+import com.example.ecocap.ui.Authentication.AuthenticationViewModel
 import com.example.ecocap.ui.Screens.Login.LoginScreen
 import com.example.ecocap.ui.Screens.Login.RegisterScreen
 import com.example.ecocap.ui.Screens.Profile.ProfileScreen
@@ -126,10 +127,20 @@ class MainActivity : ComponentActivity() {
 
             val captureImageViewModel: CaptureImageViewModel by viewModels()
 
+            val authenticationViewModel: AuthenticationViewModel by viewModels{
+                AuthenticationViewModelFactory(userRepository)
+            }
+
+            homeViewModel.sessionId = authenticationViewModel.userId
+            captureImageViewModel.sessionId = authenticationViewModel.userId
+            historyViewModel.sessionId = authenticationViewModel.userId
+            resultViewModel.sessionId = authenticationViewModel.userId
+            settingsViewModel.sessionId = authenticationViewModel.userId
+
 
 
             EcoCapTheme(darkTheme = settingsViewModel.darkIsEnabled) {
-                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel)
+                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel, authenticationViewModel)
             }
         }
     }
@@ -149,7 +160,8 @@ fun Router(
     homeViewModel: HomeViewModel,
     historyViewModel: HistoryViewModel,
     resultViewModel: ResultViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    authenticationViewModel: AuthenticationViewModel
 ) {
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
@@ -173,7 +185,10 @@ fun Router(
                     )
                 }
                 composable("HistoryScreenRoute") {
-                    HistoryScreen(getHistory = {userId: Int -> historyViewModel.getPoints(userId)})
+                    HistoryScreen(
+                        userId = historyViewModel.sessionId,
+                        getHistory = {userId: Int -> historyViewModel.getPoints(userId)}
+                    )
                 }
                 composable("CaptureScreenRoute") {
                     CaptureImageScreen(
@@ -192,6 +207,7 @@ fun Router(
                 composable("ProfileScreenRoute") {
                     ProfileScreen(
                         onLogout = {
+                            authenticationViewModel.userId = null
                             navController.navigate("LoginScreenRoute")
                         }
                     )
@@ -231,8 +247,11 @@ fun Router(
 
                 composable("LoginScreenRoute") {
                     LoginScreen(
-                        onLogin = {
-                            navController.navigate("HomeScreenRoute")
+                        onLogin = { username: String, password: String ->
+                            val userId: Int? = authenticationViewModel.login(username, password)
+                            if(userId != 0){
+                                navController.navigate("HomeScreenRoute")
+                            }
                         },
                         onRegister = { navController.navigate("RegisterScreenRoute") }
                     )
@@ -240,7 +259,10 @@ fun Router(
 
                 composable ("RegisterScreenRoute") {
                     RegisterScreen(
-                        onRegister = { navController.navigate("HomeScreenRoute") },
+                        onRegister = { username: String, password: String, confirmPassword: String ->
+                            authenticationViewModel.register(username, password, confirmPassword)
+                            navController.navigate("HomeScreenRoute")
+                                     },
                         onLogin = { navController.navigate("LoginScreenRoute") }
                     )
                 }
@@ -286,6 +308,16 @@ class SettingsViewModelFactory() : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return SettingsViewModel() as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class AuthenticationViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory{
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(AuthenticationViewModel::class.java)){
+            @Suppress("UNCHECKED_CAST")
+            return AuthenticationViewModel(userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

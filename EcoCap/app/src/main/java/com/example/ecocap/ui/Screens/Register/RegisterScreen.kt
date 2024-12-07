@@ -18,15 +18,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.foundation.text.ClickableText
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
-    onRegister: () -> Unit,
+    onRegister: suspend (username: String, password: String, confirmPassword: String) -> Unit,
     onLogin: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -77,7 +79,16 @@ fun RegisterScreen(
 
         // Register Button
         Button(
-            onClick = { onRegister() },
+            onClick = {
+                coroutineScope.launch {
+                    try {
+                        onRegister(username, password, confirmPassword) // Call the suspend function
+                    } catch (e: Exception) {
+                        // Handle exceptions (e.g., show an error message)
+                        println("Login failed: ${e.message}")
+                    }
+                }
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),

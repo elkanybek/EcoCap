@@ -41,12 +41,17 @@ import com.example.ecocap.Data.Database.PointStore
 
 @Composable
 fun HistoryScreen(
+    userId: Int?,
     getHistory: suspend (userId: Int) -> List<PointStore>
 ) {
     var history by remember { mutableStateOf<List<PointStore>>(emptyList()) }
 
     LaunchedEffect(Unit) {
-        history = getHistory(1)
+        var id: Int = 0
+        if(userId != null){
+            id = userId
+        }
+        history = getHistory(id)
     }
 
     Column(

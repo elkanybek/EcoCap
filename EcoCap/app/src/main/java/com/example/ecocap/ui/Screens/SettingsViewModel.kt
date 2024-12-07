@@ -1,6 +1,7 @@
 package com.example.ecocap.ui.Screens
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,7 @@ import com.example.ecocap.Data.Repository.PointRepository
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(): ViewModel() {
-    var sessionId: Int = 1
+    var sessionId by mutableStateOf<Int?>(1)
     var darkIsEnabled by mutableStateOf(false)
 
 

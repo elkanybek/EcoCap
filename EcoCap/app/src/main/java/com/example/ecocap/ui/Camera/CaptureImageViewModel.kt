@@ -3,6 +3,7 @@ package com.example.ecocap.ui.Camera
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -15,7 +16,7 @@ import com.google.mlkit.vision.label.ImageLabel
 class CaptureImageViewModel() : ViewModel(){
 
 
-    var sessionId: Int = 1
+    var sessionId by mutableStateOf<Int?>(1)
     var selectedImageUri by mutableStateOf<Uri?>(null)
     var topLabel by mutableStateOf<String?>(null)
     var inputLabelList: List<ImageLabel> = mutableListOf()

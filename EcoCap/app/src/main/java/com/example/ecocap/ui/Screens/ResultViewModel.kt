@@ -3,6 +3,7 @@ package com.example.ecocap.ui.Screens
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
 class ResultViewModel(private val pointRepository: PointRepository): ViewModel() {
-    var sessionId: Int = 1
+    var sessionId by mutableStateOf<Int?>(1)
     var result by mutableStateOf(false)
     var pointsGained by mutableStateOf(0)
     var imageBytes by mutableStateOf<ByteArray>(ByteArray(0))
@@ -39,6 +40,11 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
     suspend fun checkResult(quests: List<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
         result = false
+
+        if(sessionId == null){
+            return false;
+        }
+
         for(quest in quests){
             for(label in labels){
                 if(quest.name == label.text && label.confidence > 0.2){
@@ -48,7 +54,7 @@ class ResultViewModel(private val pointRepository: PointRepository): ViewModel()
                     imageBytes = uriToBytes(uri = image, context)
 
                     val pointStore: PointStore = PointStore(
-                        userId = sessionId,
+                        userId = sessionId!!,
                         questName = quest.name,
                         image = imageBytes,
                         streakMultiplier = 1.0,

@@ -2,6 +2,7 @@ package com.example.ecocap.ui.Screens.Home
 
 import QuestRepository
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,8 @@ import com.example.ecocap.Data.Database.QuestStore
 
 class HomeViewModel(private val questRepository: QuestRepository): ViewModel() {
     val questsAmount = 3
-    var sessionId: Int = 1
+    var sessionId by mutableStateOf<Int?>(1)
+
 
     var quests: List<QuestStore> = mutableListOf()
 

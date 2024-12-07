@@ -8,9 +8,12 @@ import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.UserRepository
 
 class AuthenticationViewModel(val userRepository: UserRepository): ViewModel() {
-    var userId by mutableStateOf<Int?>(null)
+    var userId by mutableStateOf<Int?>(0)
 
-    suspend fun register(username: String, password: String): Int?{
+    suspend fun register(username: String, password: String, confirmPassword: String): Int?{
+        if(password != confirmPassword || userRepository.usernameExists(username)){
+            return null
+        }
         //register user to database
         val userStore: UserStore = UserStore(
             name = username,
@@ -23,7 +26,6 @@ class AuthenticationViewModel(val userRepository: UserRepository): ViewModel() {
 
         return userId
     }
-    //iloveelsana
 
 
     suspend fun login(username: String, password: String): Int?{
