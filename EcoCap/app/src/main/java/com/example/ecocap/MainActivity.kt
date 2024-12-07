@@ -59,6 +59,7 @@ import com.example.ecocap.ui.theme.EcoCapTheme
 import androidx.activity.viewModels
 import androidx.compose.material3.DatePicker
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ecocap.Data.Database.DatabaseProvider
@@ -316,8 +317,16 @@ fun TopBar(navController: NavController, score: Int) {
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        title = { Text("EcoCap ${score}") },
+        title = { Text("EcoCap") },
         actions = {
+            Text(
+                text = "Points: $score",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .align(Alignment.CenterVertically)
+            )
             IconButton(
                 onClick = { navController.navigate("SettingsScreenRoute") },
                 //enabled = !inSettingsScreen
