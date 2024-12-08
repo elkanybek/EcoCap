@@ -22,6 +22,10 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.getUserId(name, password)
     }
 
+    suspend fun usernameExists(name: String): Boolean{
+        return userDao.checkExistingUser(name) == 1
+    }
+
     suspend fun updateUser(user: UserStore){
         userDao.update(user)
     }

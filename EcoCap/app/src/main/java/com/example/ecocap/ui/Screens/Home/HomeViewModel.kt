@@ -1,18 +1,12 @@
-package com.example.ecocap.ui.Screens
+package com.example.ecocap.ui.Screens.Home
 
 import QuestRepository
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.ecocap.Data.Database.DatabaseProvider
 import com.example.ecocap.Data.Database.QuestStore
-import com.example.ecocap.Data.quests
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 
 import android.app.Application
 import android.content.Context
@@ -30,9 +24,9 @@ class HomeViewModel(
     //private val userId: Int = 1,
     private val questRepository: QuestRepository
 ) : ViewModel() {
-    val userId: Int = 1
     var dailyStreak by mutableStateOf(0)
     private var lastSessionDate: Long = 0
+    var sessionId by mutableStateOf<Int?>(1)
     var quests: MutableList<QuestStore> = mutableListOf()
 
     init {
@@ -42,7 +36,7 @@ class HomeViewModel(
 
     private fun loadStreakData() {
         viewModelScope.launch {
-            val streakScore = streakRepository.getStreak(userId)
+            val streakScore = streakRepository.getStreak(sessionId!!)
             if (streakScore != null) {
                 dailyStreak = streakScore.dailyStreak
                 lastSessionDate = streakScore.lastSessionDate
@@ -52,7 +46,7 @@ class HomeViewModel(
 
     private fun saveStreakData() {
         viewModelScope.launch {
-            streakRepository.updateStreak(userId, dailyStreak, Date().time)
+            streakRepository.updateStreak(sessionId!!, dailyStreak, Date().time)
         }
     }
 

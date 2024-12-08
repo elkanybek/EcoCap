@@ -15,6 +15,9 @@ interface UserDao {
     @Query("SELECT id FROM users WHERE password = :password AND name= :name ")
     suspend fun getUserId(name: String, password: String): Int
 
+    @Query("SELECT 1 FROM users WHERE name= :name")
+    suspend fun checkExistingUser(name: String): Int
+
     @Query("SELECT totalPoints FROM users WHERE id = :userId ")
     suspend fun getPointsFromId(userId:Int): Int
 

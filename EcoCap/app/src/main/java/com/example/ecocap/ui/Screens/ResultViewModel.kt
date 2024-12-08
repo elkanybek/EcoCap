@@ -3,6 +3,7 @@ package com.example.ecocap.ui.Screens
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,7 @@ import com.example.ecocap.Data.Database.UserStore
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.UserRepository
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
+import com.example.ecocap.ui.Screens.Home.HomeViewModel
 import com.google.mlkit.vision.label.ImageLabel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +23,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
 class ResultViewModel(private val pointRepository: PointRepository, private val userRepository: UserRepository, private val homeViewModel: HomeViewModel): ViewModel() {
-    var sessionId: Int = 1
+    var sessionId by mutableStateOf<Int?>(1)
     var result by mutableStateOf(false)
     var pointsGained by mutableStateOf(0)
     var imageBytes by mutableStateOf<ByteArray>(ByteArray(0))
@@ -29,7 +31,7 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
 
     init {
         viewModelScope.launch{
-            totalPoints = userRepository.getUserPoints(sessionId)
+            totalPoints = userRepository.getUserPoints(sessionId!!)
         }
     }
 
@@ -55,7 +57,7 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
                     imageBytes = uriToBytes(uri = image, context)
 
                     val pointStore = PointStore(
-                        userId = sessionId,
+                        userId = sessionId!!,
                         questName = quest.name,
                         image = imageBytes,
                         streakMultiplier = streakMultiplier,
@@ -63,12 +65,12 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
                     )
                     pointRepository.insertPoints(pointStore)
 
-                    val points: List<PointStore> = pointRepository.getAllPoints(sessionId)
+                    val points: List<PointStore> = pointRepository.getAllPoints(sessionId!!)
                     totalPoints = 0
                     for(point in points){
                         totalPoints += point.scoreGained
                     }
-                    userRepository.updateTotalPoints(sessionId, totalPoints)
+                    userRepository.updateTotalPoints(sessionId!!, totalPoints)
 
                     quests.remove(quest)
                     break

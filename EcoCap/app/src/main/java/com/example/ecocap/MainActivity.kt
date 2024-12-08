@@ -51,9 +51,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.ecocap.ui.Camera.CaptureImageScreen
-import com.example.ecocap.ui.Screens.HistoryScreen
-import com.example.ecocap.ui.Screens.HomeScreen
-import com.example.ecocap.ui.Screens.ProfileScreen
+import com.example.ecocap.ui.Screens.History.HistoryScreen
+import com.example.ecocap.ui.Screens.Home.HomeScreen
 import com.example.ecocap.ui.Screens.SettingsScreen
 import com.example.ecocap.ui.theme.EcoCapTheme
 import androidx.activity.viewModels
@@ -71,13 +70,17 @@ import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.StreakRepository
 import com.example.ecocap.Data.quests
 import com.example.ecocap.ui.Camera.CaptureImageViewModel
-import com.example.ecocap.ui.Screens.HistoryViewModel
-import com.example.ecocap.ui.Screens.HomeViewModel
+import com.example.ecocap.ui.Screens.History.HistoryViewModel
+import com.example.ecocap.ui.Screens.Home.HomeViewModel
 import com.example.ecocap.ui.Screens.ResultScreen
 import com.example.ecocap.ui.Screens.ResultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.ecocap.Data.Repository.UserRepository
+import com.example.ecocap.ui.Authentication.AuthenticationViewModel
+import com.example.ecocap.ui.Screens.Login.LoginScreen
+import com.example.ecocap.ui.Screens.Login.RegisterScreen
+import com.example.ecocap.ui.Screens.Profile.ProfileScreen
 import com.example.ecocap.ui.Screens.SettingsViewModel
 import java.util.Date
 
@@ -143,10 +146,20 @@ class MainActivity : ComponentActivity() {
 
             val captureImageViewModel: CaptureImageViewModel by viewModels()
 
+            val authenticationViewModel: AuthenticationViewModel by viewModels{
+                AuthenticationViewModelFactory(userRepository)
+            }
+
+            homeViewModel.sessionId = authenticationViewModel.userId
+            captureImageViewModel.sessionId = authenticationViewModel.userId
+            historyViewModel.sessionId = authenticationViewModel.userId
+            resultViewModel.sessionId = authenticationViewModel.userId
+            settingsViewModel.sessionId = authenticationViewModel.userId
+
 
 
             EcoCapTheme(darkTheme = settingsViewModel.darkIsEnabled) {
-                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel)
+                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel, authenticationViewModel)
             }
         }
     }
@@ -166,11 +179,13 @@ fun Router(
     homeViewModel: HomeViewModel,
     historyViewModel: HistoryViewModel,
     resultViewModel: ResultViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    authenticationViewModel: AuthenticationViewModel
 ) {
     val navController = rememberNavController()
     var canNavigateBack by rememberSaveable { mutableStateOf(false) }
     var inSettingsScreen by rememberSaveable { mutableStateOf(false) }
+
     var quests by remember { mutableStateOf<List<QuestStore>>(emptyList()) }
 
     LaunchedEffect(Unit) {
@@ -179,7 +194,7 @@ fun Router(
 
     TopBottomBar(navController, resultViewModel.totalPoints) {
         CompositionLocalProvider(LocalNavController provides navController) {
-            NavHost(navController = navController, startDestination = "HomeScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
+            NavHost(navController = navController, startDestination = "LoginScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
                 //NavBar
                 composable("HomeScreenRoute") {
@@ -189,7 +204,10 @@ fun Router(
                     )
                 }
                 composable("HistoryScreenRoute") {
-                    HistoryScreen(getHistory = {userId: Int -> historyViewModel.getPoints(userId)})
+                    HistoryScreen(
+                        userId = historyViewModel.sessionId,
+                        getHistory = {userId: Int -> historyViewModel.getPoints(userId)}
+                    )
                 }
                 composable("CaptureScreenRoute") {
                     CaptureImageScreen(
@@ -206,7 +224,13 @@ fun Router(
                     )
                 }
                 composable("ProfileScreenRoute") {
-                    ProfileScreen()
+                    ProfileScreen(
+                        onLogout = {
+                            authenticationViewModel.userId = null
+                            navController.navigate("LoginScreenRoute")
+                        }
+                    )
+
                 }
                 composable("SettingsScreenRoute") {
                     SettingsScreen(
@@ -237,6 +261,29 @@ fun Router(
                         image = resultViewModel.imageBytes,
                         result = resultViewModel.result,
                         pointsGained = resultViewModel.pointsGained
+                    )
+                }
+
+
+                composable("LoginScreenRoute") {
+                    LoginScreen(
+                        onLogin = { username: String, password: String ->
+                            val userId: Int? = authenticationViewModel.login(username, password)
+                            if(userId != 0){
+                                navController.navigate("HomeScreenRoute")
+                            }
+                        },
+                        onRegister = { navController.navigate("RegisterScreenRoute") }
+                    )
+                }
+
+                composable ("RegisterScreenRoute") {
+                    RegisterScreen(
+                        onRegister = { username: String, password: String, confirmPassword: String ->
+                            authenticationViewModel.register(username, password, confirmPassword)
+                            navController.navigate("HomeScreenRoute")
+                                     },
+                        onLogin = { navController.navigate("LoginScreenRoute") }
                     )
                 }
             }
@@ -281,6 +328,16 @@ class SettingsViewModelFactory() : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return SettingsViewModel() as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class AuthenticationViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory{
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(AuthenticationViewModel::class.java)){
+            @Suppress("UNCHECKED_CAST")
+            return AuthenticationViewModel(userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -378,13 +435,17 @@ fun BottomBar(navController: NavController) {
                 }
                 IconButton(
                     onClick = { navController.navigate("ProfileScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
                 }
                 IconButton(
                     onClick = { navController.navigate("SettingsScreenRoute") },
-                    modifier = Modifier.size(56.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
                 ) {
                     Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
                 }
