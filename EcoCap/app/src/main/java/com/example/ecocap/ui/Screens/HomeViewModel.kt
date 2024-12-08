@@ -12,17 +12,22 @@ import com.example.ecocap.Data.Database.QuestStore
 import com.example.ecocap.Data.quests
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
 
 
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecocap.Data.Repository.PointRepository
 import com.example.ecocap.Data.Repository.StreakRepository
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.Date
 
 //class HomeViewModel(private val questRepository: QuestRepository): ViewModel() {
@@ -118,26 +123,47 @@ class HomeViewModel(
         }
     }
 
+//    fun checkStreak() {
+////        val today = System.currentTimeMillis()
+//
+//        val today = Date().time
+//
+//        // Timestamps to calendar days
+//        val lastSessionDay = lastSessionDate / (24 * 60 * 60 * 1000)
+//        val currentDay = today / (24 * 60 * 60 * 1000)
+//
+//        if (currentDay == lastSessionDay) {
+//            return
+//        } else if ((currentDay - lastSessionDay).toInt() <= 1) {
+//            dailyStreak++
+//        } else {
+//            dailyStreak = 1
+//        }
+//
+//        lastSessionDate = today
+//        saveStreakData()
+//    }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun checkStreak() {
-//        val today = System.currentTimeMillis()
+        val today = LocalDate.now(ZoneId.systemDefault())
+        val lastSessionDay = Instant.ofEpochMilli(lastSessionDate)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
 
-        val today = Date().time
-
-        // Timestamps to calendar days
-        val lastSessionDay = lastSessionDate / (24 * 60 * 60 * 1000)
-        val currentDay = today / (24 * 60 * 60 * 1000)
-
-        if (currentDay == lastSessionDay) {
+        if (today == lastSessionDay) {
             return
-        } else if ((currentDay - lastSessionDay).toInt() <= 1) {
+        }
+
+        if (today.minusDays(1) == lastSessionDay) {
             dailyStreak++
         } else {
             dailyStreak = 1
         }
 
-        lastSessionDate = today
+        lastSessionDate = today.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         saveStreakData()
     }
+
 
     suspend fun getQuest(): QuestStore {
         return questRepository.getRandomQuest()
