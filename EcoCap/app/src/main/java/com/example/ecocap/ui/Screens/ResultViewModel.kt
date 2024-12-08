@@ -36,6 +36,11 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
     suspend fun checkResult(quests: MutableList<QuestStore>, labels: List<ImageLabel>, image: Uri?, context: Context): Boolean{
         pointsGained = 0
         result = false
+
+        if(sessionId == null){
+            return false;
+        }
+
         homeViewModel.checkStreak()
         val questsToRemove = mutableListOf<QuestStore>()
         var isMatchFound = false
