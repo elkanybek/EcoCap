@@ -198,7 +198,7 @@ fun Router(
         quests = homeViewModel.getQuests()
     }
 
-    TopBottomBar(navController, resultViewModel.totalPoints) {
+    TopBottomBar(navController, resultViewModel.totalPoints, userId = authenticationViewModel.userId) {
         CompositionLocalProvider(LocalNavController provides navController) {
             NavHost(navController = navController, startDestination = "LoginScreenRoute",  enterTransition = { slideInHorizontally { length -> length } }, exitTransition = { slideOutHorizontally { length -> -length } }) {
 
@@ -374,11 +374,12 @@ fun TopBottomBar(
     navController: NavController,
     //inSettingsScreen: Boolean,
     score: Int,
-    content: @Composable () -> Unit
+    userId: Int?,
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
         topBar = { TopBar(navController, score) },
-        bottomBar = { BottomBar(navController) },
+        bottomBar = { BottomBar(navController, userId) },
         content = { content() }
     )
 }
@@ -421,57 +422,59 @@ fun TopBar(navController: NavController, score: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(navController: NavController) {
-    BottomAppBar(
-        actions = {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(
-                    onClick = { navController.navigate("HomeScreenRoute") },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
+fun BottomBar(navController: NavController, userId: Int?) {
+    if(userId != 0 && userId != null){
+        BottomAppBar(
+            actions = {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
+                    IconButton(
+                        onClick = { navController.navigate("HomeScreenRoute") },
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Icon(Icons.Rounded.Home, contentDescription = "Home", Modifier.size(40.dp))
+                    }
+                    IconButton(
+                        onClick = { navController.navigate("HistoryScreenRoute") },
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
+                    }
+                    IconButton(
+                        onClick = { navController.navigate("CaptureScreenRoute") },
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Icon(Icons.Filled.AddCircle, contentDescription = "Capture", Modifier.size(40.dp))
+                    }
+                    IconButton(
+                        onClick = { navController.navigate("ProfileScreenRoute") },
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
+                    }
+                    IconButton(
+                        onClick = { navController.navigate("SettingsScreenRoute") },
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
+                    }
                 }
-                IconButton(
-                    onClick = { navController.navigate("HistoryScreenRoute") },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                ) {
-                    Icon(Icons.Filled.DateRange, contentDescription = "History", Modifier.size(40.dp))
-                }
-                IconButton(
-                    onClick = { navController.navigate("CaptureScreenRoute") },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                ) {
-                    Icon(Icons.Filled.AddCircle, contentDescription = "Capture", Modifier.size(40.dp))
-                }
-                IconButton(
-                    onClick = { navController.navigate("ProfileScreenRoute") },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                ) {
-                    Icon(Icons.Filled.AccountCircle, contentDescription = "Profile", Modifier.size(40.dp))
-                }
-                IconButton(
-                    onClick = { navController.navigate("SettingsScreenRoute") },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                ) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Settings", Modifier.size(40.dp))
-                }
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.tertiary,
-    )
+            },
+            containerColor = MaterialTheme.colorScheme.tertiary,
+        )
+    }
 }
 
 @Preview
