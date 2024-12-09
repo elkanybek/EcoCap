@@ -32,7 +32,17 @@ class ProfileViewModel(private val userRepository: UserRepository): ViewModel() 
     init {
         viewModelScope.launch {
             var user: UserStore? = userRepository.getUser(sessionId!!)
-            username = user!!.name
+            if(user != null){
+                username = user.name
+                password = user.password
+            }
+        }
+    }
+
+    suspend fun update(){
+        var user: UserStore? = userRepository.getUser(sessionId!!)
+        if(user != null){
+            username = user.name
             password = user.password
         }
     }

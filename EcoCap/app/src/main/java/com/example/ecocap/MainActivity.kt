@@ -160,6 +160,14 @@ class MainActivity : ComponentActivity() {
             historyViewModel.sessionId = authenticationViewModel.userId
             resultViewModel.sessionId = authenticationViewModel.userId
             settingsViewModel.sessionId = authenticationViewModel.userId
+            profileViewModel.sessionId = authenticationViewModel.userId
+
+            LaunchedEffect(Unit) {
+                launch(Dispatchers.IO) {
+                    resultViewModel.updatePoints()
+                    profileViewModel.update()
+                }
+            }
 
 
 

@@ -81,6 +81,12 @@ class ResultViewModel(private val pointRepository: PointRepository, private val 
         return isMatchFound
     }
 
+    suspend fun updatePoints(){
+        viewModelScope.launch{
+            totalPoints = userRepository.getUserPoints(sessionId!!)
+        }
+    }
+
     private fun uriToBytes(uri: Uri?, context: Context): ByteArray{
         if (uri == null) {
             return ByteArray(0)
