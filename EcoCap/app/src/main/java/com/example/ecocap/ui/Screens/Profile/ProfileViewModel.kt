@@ -2,6 +2,7 @@ package com.example.ecocap.ui.Screens.Profile
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +25,32 @@ import java.io.InputStream
 
 class ProfileViewModel(private val userRepository: UserRepository): ViewModel() {
     var sessionId by mutableStateOf<Int?>(1)
-    var name by mutableStateOf("")
-    var password by mutableStateOf("")
+    var points = 0
+    var username by mutableStateOf("DavyDav")
+    var password by mutableStateOf("********")
 
+    init {
+        viewModelScope.launch {
+            var user: UserStore? = userRepository.getUser(sessionId!!)
+            username = user!!.name
+            password = user.password
+        }
+    }
+
+    fun updateUser(newUsername: String, newPassword: String, confirmPassword: String): Boolean{
+        if(newPassword != confirmPassword){
+            return false
+        }
+
+        viewModelScope.launch {
+            points = userRepository.getUserPoints(sessionId!!)
+            userRepository.updateUser(UserStore(id = sessionId!!, name = newUsername, password = newPassword, totalPoints = points))
+
+            var user: UserStore? = userRepository.getUser(sessionId!!)
+            username = user!!.name
+            password = user.password
+
+        }
+        return true
+    }
 }

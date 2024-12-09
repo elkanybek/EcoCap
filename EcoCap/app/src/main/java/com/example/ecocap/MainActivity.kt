@@ -81,6 +81,7 @@ import com.example.ecocap.ui.Authentication.AuthenticationViewModel
 import com.example.ecocap.ui.Screens.Login.LoginScreen
 import com.example.ecocap.ui.Screens.Login.RegisterScreen
 import com.example.ecocap.ui.Screens.Profile.ProfileScreen
+import com.example.ecocap.ui.Screens.Profile.ProfileViewModel
 import com.example.ecocap.ui.Screens.SettingsViewModel
 import java.util.Date
 
@@ -138,6 +139,10 @@ class MainActivity : ComponentActivity() {
                 ResultViewModelFactory(pointRepository, userRepository, homeViewModel)
             }
 
+            val profileViewModel: ProfileViewModel by viewModels{
+                ProfileViewModelFactory(userRepository)
+            }
+
             val settingsViewModel: SettingsViewModel by viewModels{
                 SettingsViewModelFactory()
             }
@@ -159,7 +164,7 @@ class MainActivity : ComponentActivity() {
 
 
             EcoCapTheme(darkTheme = settingsViewModel.darkIsEnabled) {
-                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel, authenticationViewModel)
+                Router(this, captureImageViewModel, homeViewModel, historyViewModel, resultViewModel, settingsViewModel, profileViewModel, authenticationViewModel)
             }
         }
     }
@@ -180,6 +185,7 @@ fun Router(
     historyViewModel: HistoryViewModel,
     resultViewModel: ResultViewModel,
     settingsViewModel: SettingsViewModel,
+    profileViewModel: ProfileViewModel,
     authenticationViewModel: AuthenticationViewModel
 ) {
     val navController = rememberNavController()
@@ -225,6 +231,9 @@ fun Router(
                 }
                 composable("ProfileScreenRoute") {
                     ProfileScreen(
+                        username = profileViewModel.username,
+                        password = profileViewModel.password,
+                        updateUser = profileViewModel::updateUser,
                         onLogout = {
                             authenticationViewModel.userId = null
                             navController.navigate("LoginScreenRoute")
@@ -338,6 +347,16 @@ class AuthenticationViewModelFactory(private val userRepository: UserRepository)
         if(modelClass.isAssignableFrom(AuthenticationViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
             return AuthenticationViewModel(userRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class ProfileViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory{
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
+            @Suppress("UNCHECKED_CAST")
+            return ProfileViewModel(userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

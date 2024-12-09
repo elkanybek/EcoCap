@@ -22,18 +22,14 @@ import com.example.ecocap.R
 
 @Composable
 fun ProfileScreen(
+    username: String,
+    password: String,
+    updateUser: (username: String, password: String, confirmPassword: String) -> Unit,
     onLogout: () -> Unit
 ) {
-    var username by remember { mutableStateOf("DavyDav") }
-    var password by remember { mutableStateOf("********") }
-    var confirmPassword by remember { mutableStateOf("********") }
-
-    // Track changes to fields
+    var confirmPassword by remember { mutableStateOf(password) }
     var initialUsername by remember { mutableStateOf(username) }
     var initialPassword by remember { mutableStateOf(password) }
-    var initialConfirmPassword by remember { mutableStateOf(confirmPassword) }
-
-    val isChanged = username != initialUsername || password != initialPassword || confirmPassword != initialConfirmPassword
 
     Column(
         modifier = Modifier
@@ -56,8 +52,8 @@ fun ProfileScreen(
         // Username Field
         com.example.ecocap.ui.Screens.Profile.EditableSettingsField(
             label = "Username",
-            value = username,
-            onValueChange = { username = it }
+            value = initialUsername,
+            onValueChange = { initialUsername = it }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -65,8 +61,8 @@ fun ProfileScreen(
         // Password Field
         com.example.ecocap.ui.Screens.Profile.EditableSettingsField(
             label = "Password",
-            value = password,
-            onValueChange = { password = it },
+            value = initialPassword,
+            onValueChange = { initialPassword = it },
             isPassword = true
         )
 
@@ -85,17 +81,13 @@ fun ProfileScreen(
         // Apply Button
         Button(
             onClick = {
-                // Update initial values
-                initialUsername = username
-                initialPassword = password
-                initialConfirmPassword = confirmPassword
+                updateUser(initialUsername, initialPassword, confirmPassword)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            enabled = isChanged,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isChanged) Color(0xFF4CAF50) else Color.Gray,
+                containerColor = Color(0xFF4CAF50),
                 disabledContainerColor = Color.Gray
             )
         ) {
