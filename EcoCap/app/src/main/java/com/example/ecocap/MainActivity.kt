@@ -378,7 +378,7 @@ fun TopBottomBar(
     content: @Composable () -> Unit,
 ) {
     Scaffold(
-        topBar = { TopBar(navController, score) },
+        topBar = { TopBar(navController, score, userId) },
         bottomBar = { BottomBar(navController, userId) },
         content = { content() }
     )
@@ -386,7 +386,7 @@ fun TopBottomBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController, score: Int) {
+fun TopBar(navController: NavController, score: Int, userId: Int?) {
     TopAppBar(
         modifier = Modifier.padding(0.dp),
         colors = topAppBarColors(
@@ -396,14 +396,16 @@ fun TopBar(navController: NavController, score: Int) {
         ),
         title = { Text("EcoCap") },
         actions = {
-            Text(
-                text = "Points: $score",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .align(Alignment.CenterVertically)
-            )
+            if(userId != 0 && userId != null) {
+                Text(
+                    text = "Points: $score",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
             IconButton(
                 onClick = { navController.navigate("SettingsScreenRoute") },
                 //enabled = !inSettingsScreen
